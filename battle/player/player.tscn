@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://f21wrfuls4qm"]
+
+[ext_resource type="Script" uid="uid://bwohuw7tplm5k" path="res://battle/player.gd" id="1_xh1jf"]
+
+[node name="Player" type="Node2D"]
+z_index = 5
+script = ExtResource("1_xh1jf")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(25, 25)
+offset_left = -1.0
+offset_right = 24.0
+offset_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.349551, 0.426503, 0.613229, 1)
+
+[node name="InvulnTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="InvulnTimer" to="." method="_on_invuln_timer_timeout"]

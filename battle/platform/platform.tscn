@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://bbs1xa8xd8c01"]
+
+[ext_resource type="Script" uid="uid://cjctk78xfhan5" path="res://battle/platform/platform.gd" id="1_u2co8"]
+[ext_resource type="Script" uid="uid://bf0dklh025rm8" path="res://battle/state_machine.gd" id="2_kqoq2"]
+[ext_resource type="Script" uid="uid://dnlsrgmj4lqkh" path="res://battle/platform/States/PlatformDefault.gd" id="3_kqoq2"]
+[ext_resource type="Script" uid="uid://b7w1f2kfa5ik8" path="res://battle/platform/States/PlatformOrange.gd" id="4_e4cih"]
+[ext_resource type="Script" uid="uid://duoq1jco8ei1x" path="res://battle/platform/States/PlatformRed.gd" id="4_vfigo"]
+[ext_resource type="Script" uid="uid://cmleox4b0mu30" path="res://battle/platform/States/PlatformBlack.gd" id="6_g5ljy"]
+
+[node name="Platform" type="Node2D"]
+script = ExtResource("1_u2co8")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(50, 50)
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.381703, 0.381703, 0.381703, 1)
+
+[node name="State Machine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_kqoq2")
+initial_state = NodePath("PlatformDefault")
+
+[node name="PlatformDefault" type="Node" parent="State Machine"]
+script = ExtResource("3_kqoq2")
+metadata/_custom_type_script = "uid://dnlsrgmj4lqkh"
+
+[node name="PlatformOrange" type="Node" parent="State Machine"]
+script = ExtResource("4_e4cih")
+metadata/_custom_type_script = "uid://b7w1f2kfa5ik8"
+
+[node name="FlashTimer" type="Timer" parent="State Machine/PlatformOrange"]
+one_shot = true
+
+[node name="PlatformRed" type="Node" parent="State Machine"]
+script = ExtResource("4_vfigo")
+metadata/_custom_type_script = "uid://duoq1jco8ei1x"
+
+[node name="Timer" type="Timer" parent="State Machine/PlatformRed"]
+
+[node name="PlatformBlack" type="Node" parent="State Machine"]
+script = ExtResource("6_g5ljy")
+metadata/_custom_type_script = "uid://cmleox4b0mu30"
+
+[connection signal="timeout" from="State Machine/PlatformOrange/FlashTimer" to="State Machine/PlatformOrange" method="_on_flash_timer_timeout"]
+[connection signal="timeout" from="State Machine/PlatformRed/Timer" to="State Machine/PlatformRed" method="_on_timer_timeout"]

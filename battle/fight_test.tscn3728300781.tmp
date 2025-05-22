@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://sfxgelxxb330"]
+
+[ext_resource type="Script" uid="uid://pohkt4s83bcx" path="res://battle/fight_test.gd" id="1_dem6r"]
+[ext_resource type="PackedScene" uid="uid://dn363pv1csx7h" path="res://battle/player.tscn" id="2_bri15"]
+[ext_resource type="Script" uid="uid://6gvo4vikylrw" path="res://battle/grid_helper.gd" id="3_bri15"]
+
+[node name="FightTest" type="Node2D"]
+script = ExtResource("1_dem6r")
+
+[node name="Player" parent="." instance=ExtResource("2_bri15")]
+
+[node name="Grid" type="GridContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 536.0
+offset_top = 283.0
+offset_right = 576.0
+offset_bottom = 323.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="GridHelper" type="Node" parent="Grid"]
+script = ExtResource("3_bri15")
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -1
+offset_left = -2065.0
+offset_top = -1171.0
+offset_right = 3458.0
+offset_bottom = 1675.0
+color = Color(0.691357, 0.691357, 0.691357, 1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(574, 323)

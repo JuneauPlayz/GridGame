@@ -1,0 +1,61 @@
+[gd_scene load_steps=5 format=3 uid="uid://drr4v5iwqddeu"]
+
+[ext_resource type="Script" uid="uid://bbkmh8asty2xi" path="res://cast_timer.gd" id="1_fwb0y"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_fwb0y"]
+font_size = 31
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fwb0y"]
+bg_color = Color(0.176419, 0.176419, 0.176419, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.579872, 0.209041, 0.145933, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ncbyv"]
+border_width_left = 5
+border_width_top = 5
+border_width_right = 2
+border_width_bottom = 5
+border_color = Color(0.580392, 0.207843, 0.145098, 0.607843)
+
+[node name="CastTimer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 9.0
+offset_right = -10.0
+offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fwb0y")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 2.0
+offset_right = 210.0
+offset_bottom = 46.0
+text = "Attack Name"
+label_settings = SubResource("LabelSettings_fwb0y")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 48.0
+offset_right = 447.0
+offset_bottom = 77.0
+theme_override_styles/background = SubResource("StyleBoxFlat_fwb0y")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ncbyv")
+value = 42.82
+show_percentage = false
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -1,0 +1,78 @@
+[gd_scene load_steps=6 format=3 uid="uid://sfxgelxxb330"]
+
+[ext_resource type="Script" uid="uid://pohkt4s83bcx" path="res://battle/fight_test.gd" id="1_dem6r"]
+[ext_resource type="PackedScene" uid="uid://dn363pv1csx7h" path="res://battle/player.tscn" id="2_bri15"]
+[ext_resource type="Script" uid="uid://6gvo4vikylrw" path="res://battle/grid_helper.gd" id="3_bri15"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_bri15"]
+font_size = 46
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_af8yq"]
+font_size = 54
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
+
+[node name="FightTest" type="Node2D"]
+script = ExtResource("1_dem6r")
+
+[node name="Player" parent="." instance=ExtResource("2_bri15")]
+
+[node name="Grid" type="GridContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 932.0
+offset_top = 519.0
+offset_right = 972.0
+offset_bottom = 559.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="GridHelper" type="Node" parent="Grid"]
+script = ExtResource("3_bri15")
+
+[node name="CastTimers" type="VBoxContainer" parent="."]
+offset_left = 730.0
+offset_top = 32.0
+offset_right = 730.0
+offset_bottom = 32.0
+theme_override_constants/separation = 75
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(952, 541)
+ignore_rotation = false
+
+[node name="Background" type="ColorRect" parent="Camera2D"]
+z_index = -1
+offset_left = -2127.0
+offset_top = -1650.0
+offset_right = 3396.0
+offset_bottom = 1196.0
+color = Color(0.691357, 0.691357, 0.691357, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="HealthText" type="Label" parent="Camera2D/CanvasLayer"]
+offset_left = 1630.0
+offset_top = 39.0
+offset_right = 1828.0
+offset_bottom = 103.0
+text = "Health: 3"
+label_settings = SubResource("LabelSettings_bri15")
+
+[node name="Mechanics" type="Node2D" parent="."]
+
+[node name="DDR" type="Label" parent="Mechanics"]
+offset_left = 96.0
+offset_top = 237.0
+offset_right = 217.0
+offset_bottom = 311.0
+label_settings = SubResource("LabelSettings_af8yq")
+
+[connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]

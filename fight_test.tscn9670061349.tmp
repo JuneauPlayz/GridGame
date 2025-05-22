@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://sfxgelxxb330"]
+
+[ext_resource type="Script" uid="uid://pohkt4s83bcx" path="res://fight_test.gd" id="1_glb86"]
+
+[node name="FightTest" type="Node2D"]
+script = ExtResource("1_glb86")
+
+[node name="Grid" type="GridContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 535.0
+offset_top = 270.0
+offset_right = 575.0
+offset_bottom = 310.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -1
+offset_left = -2065.0
+offset_top = -1171.0
+offset_right = 3458.0
+offset_bottom = 1675.0
+color = Color(0.691357, 0.691357, 0.691357, 1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(574, 323)
