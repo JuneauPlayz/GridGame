@@ -100,3 +100,35 @@ func get_half(side):
 			push_warning("Invalid side: " + side)
 
 	return result
+	
+func get_outer_ring() -> Array:
+	var result = []
+	var rows = grid_arr.size()
+	var cols = grid_arr[0].size()
+
+	for c in range(cols):
+		result.append(grid_arr[0][c])            # top row
+		result.append(grid_arr[rows - 1][c])      # bottom row
+
+	for r in range(1, rows - 1):
+		result.append(grid_arr[r][0])            # left column
+		result.append(grid_arr[r][cols - 1])      # right column
+
+	return result
+
+func get_middle_ring() -> Array:
+	var result = []
+	var start = 1
+	var end = grid_arr.size() - 2  # 4 for 6x6
+
+	# Top and bottom of middle ring
+	for c in range(start, end + 1):
+		result.append(grid_arr[start][c])       # top of middle ring
+		result.append(grid_arr[end][c])         # bottom of middle ring
+
+	# Left and right sides of middle ring
+	for r in range(start + 1, end):
+		result.append(grid_arr[r][start])       # left of middle ring
+		result.append(grid_arr[r][end])         # right of middle ring
+
+	return result

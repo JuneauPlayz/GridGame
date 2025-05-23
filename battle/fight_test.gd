@@ -7,7 +7,8 @@ const CAST_TIMER = preload("res://cast_timer.tscn")
 @onready var player: Node2D = $Player
 @onready var cast_timers: VBoxContainer = $CastTimers
 @onready var health_text: Label = $Camera2D/CanvasLayer/HealthText
-
+@onready var enemy: Node2D = $Enemy
+	
 var grid_arr = []
 
 var game
@@ -27,6 +28,7 @@ func _ready():
 	player.player_size = player_size
 	move_player(0,0)
 	player.current_platform = grid_arr[0][0]
+	set_enemy()
 	start_fight2()
 	
 func start_fight():
@@ -83,80 +85,123 @@ func start_fight():
 func start_fight2():
 	for platform in grid_helper.get_mid_block():
 		platform.transition("PlatformBlack", -1)
+		platform.visible = false
 
 	#await get_tree().create_timer(0.5).timeout
-	#await lefty(2.0)
+	#await attack("lefty", 2.0)
 	#await get_tree().create_timer(0.5).timeout
-	#await righty(2.0)
+	#await attack("righty", 2.0)
 	#await get_tree().create_timer(0.5).timeout
-	#await uppercut(2.0)
+	#await attack("uppercut", 2.0)
 	#await get_tree().create_timer(0.5).timeout
-	#await low_blow(2.0)
+	#await attack("low_blow", 2.0)
+#
+	#await get_tree().create_timer(2.0).timeout
+	#await attack("lefty", 2.0)
+	#await get_tree().create_timer(1.75).timeout
+	#await attack("righty", 2.0)
+	#await get_tree().create_timer(1.75).timeout
+	#await attack("lefty", 2.0)
+	#await get_tree().create_timer(3).timeout
+	#start_cast_timer("Fakeout", 2.0)
+	#await get_tree().create_timer(2.5).timeout
+	#await attack("lefty", 2.0, true)
+	#await get_tree().create_timer(3).timeout
+	#start_cast_timer("Fakeout", 2.0)
+	#await get_tree().create_timer(2.5).timeout
+	#await attack("uppercut", 2.0, true)
+#
+	#await get_tree().create_timer(2.0).timeout
+	#await attack("inner_ring", 2.0)
+	#await get_tree().create_timer(3.0).timeout
+	#await attack("outer_ring", 2.0)
+#
+	#await get_tree().create_timer(3.0).timeout
+	#await attack("outer_ring", 2.0)
+	#await attack("lefty", 2.0)
+#
+	#await get_tree().create_timer(3.0).timeout
+	#await attack("inner_ring", 2.0)
+	#await attack("lefty", 2.0)
+	#await attack("low_blow", 2.0)
+#
+	#await get_tree().create_timer(3.0).timeout
+	#await attack("inner_ring", 2.0)
+	#await attack("lefty", 2.0)
+#
+	#await get_tree().create_timer(2.0).timeout
+	#await attack("outer_ring", 2.0)
+	#await attack("righty", 2.0)
 
+	await get_tree().create_timer(3.0).timeout
+	start_cast_timer("Turning Point", 2.0)
 	await get_tree().create_timer(2.0).timeout
-	lefty(2.0)
-	await get_tree().create_timer(1.75).timeout
-	righty(2.0)
-	await get_tree().create_timer(1.75).timeout
-	lefty(2.0)
-	await get_tree().create_timer(3).timeout
-	start_cast_timer("Fakeout", 2.0)
-	await get_tree().create_timer(2.5).timeout
-	fakeout_lefty(2.0)
-	await get_tree().create_timer(3).timeout
-	start_cast_timer("Fakeout", 2.0)
-	await get_tree().create_timer(2.5).timeout
-	fakeout_uppercut(2.0)
-		
-func lefty(cast_time):
-	start_cast_timer("Lefty", cast_time)
-	await get_tree().create_timer(cast_time).timeout
-	for platform in grid_helper.get_half("left"):
-		platform.transition("PlatformOrange",1)
+	rotate_enemy(90)
+	await get_tree().create_timer(1.0).timeout
+	await attack("lefty", 2.0)
+	await get_tree().create_timer(1.0).timeout
+	await attack("uppercut", 2.0)
 
-func fakeout_lefty(cast_time):
-	start_cast_timer("Lefty", cast_time)
+func attack(name: String, cast_time: float, fakeout := false):
+	var mapped_attack = get_mapped_attack(name, fakeout)
+	start_cast_timer(name.capitalize(), cast_time)
 	await get_tree().create_timer(cast_time).timeout
-	for platform in grid_helper.get_half("right"):
-		platform.transition("PlatformOrange",1)
+
+	var targets = []
+	match mapped_attack:
+		"left":
+			targets = grid_helper.get_half("left")
+		"right":
+			targets = grid_helper.get_half("right")
+		"top":
+			targets = grid_helper.get_half("top")
+		"bottom":
+			targets = grid_helper.get_half("bottom")
+		"outer_ring":
+			targets = grid_helper.get_outer_ring()
+		"inner_ring":
+			targets = grid_helper.get_middle_ring()
+
+	for platform in targets:
+		platform.transition("PlatformOrange", 1)
+
+func get_mapped_attack(name: String, fakeout: bool) -> String:
+	var angle = int(round(rad_to_deg(enemy.rotation))) % 360
+	if angle % 90 != 0:
+		angle = 0  # Fallback for non-orthogonal rotations
+
+	var map = {
+		"lefty": ["left", "right"],
+		"righty": ["right", "left"],
+		"uppercut": ["top", "bottom"],
+		"low_blow": ["bottom", "top"]
+	}
+
+	var direction = map.get(name, name)
+	if direction is String:
+		return direction  # for "outer_ring", etc.
+
+	var primary = direction[0]
+	var fake = direction[1]
+
+	var rotation_to_direction = {
+		0: {"left": "left", "right": "right", "top": "top", "bottom": "bottom"},
+		90: {"left": "top", "right": "bottom", "top": "right", "bottom": "left"},
+		180: {"left": "right", "right": "left", "top": "bottom", "bottom": "top"},
+		270: {"left": "bottom", "right": "top", "top": "left", "bottom": "right"}
+	}
+
+	var rot_map = rotation_to_direction.get(angle, rotation_to_direction[0])
+	if fakeout:
+		return rot_map[fake]
+	else:
+		return rot_map[primary]
+
+
+func rotate_enemy(deg):
+	enemy.rotation = deg_to_rad(deg)
+
 	
-func righty(cast_time):
-	start_cast_timer("Righty", cast_time)
-	await get_tree().create_timer(cast_time).timeout
-	for platform in grid_helper.get_half("right"):
-		platform.transition("PlatformOrange",1)
-
-func fakeout_righty(cast_time):
-	start_cast_timer("Righty", cast_time)
-	await get_tree().create_timer(cast_time).timeout
-	for platform in grid_helper.get_half("left"):
-		platform.transition("PlatformOrange",1)
-
-func uppercut(cast_time):
-	start_cast_timer("Uppercut", cast_time)
-	await get_tree().create_timer(cast_time).timeout
-	for platform in grid_helper.get_half("top"):
-		platform.transition("PlatformOrange",1)
-
-func fakeout_uppercut(cast_time):
-	start_cast_timer("Uppercut", cast_time)
-	await get_tree().create_timer(cast_time).timeout
-	for platform in grid_helper.get_half("bottom"):
-		platform.transition("PlatformOrange",1)
-		
-func low_blow(cast_time):
-	start_cast_timer("Low Blow", cast_time)
-	await get_tree().create_timer(cast_time).timeout
-	for platform in grid_helper.get_half("bottom"):
-		platform.transition("PlatformOrange",1)
-
-func fakeout_low_blow(cast_time):
-	start_cast_timer("Low Blow", cast_time)
-	await get_tree().create_timer(cast_time).timeout
-	for platform in grid_helper.get_half("top"):
-		platform.transition("PlatformOrange",1)
-		
-
 func start_cast_timer(name, length):
 	var new_cast_timer = CAST_TIMER.instantiate()
 	new_cast_timer.call_deferred("start", name, length)
@@ -194,3 +239,12 @@ func move_player(x, y):
 	
 func _on_player_health_changed() -> void:
 	health_text.text = "Health: " + str(player.health)
+
+func set_enemy():
+	var platform_center_offset = Vector2(platform_size / 2, platform_size / 2)
+	var a = grid_arr[2][2].get_pos() + platform_center_offset
+	var b = grid_arr[2][3].get_pos() + platform_center_offset
+	var c = grid_arr[3][2].get_pos() + platform_center_offset
+	var d = grid_arr[3][3].get_pos() + platform_center_offset
+	
+	enemy.global_position =  (a + b + c + d) / 4

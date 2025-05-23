@@ -16,7 +16,6 @@ size_flags_vertical = 4
 color = Color(0.349551, 0.426503, 0.613229, 1)
 
 [node name="InvulnTimer" type="Timer" parent="."]
-wait_time = 0.5
 one_shot = true
 
 [connection signal="timeout" from="InvulnTimer" to="." method="_on_invuln_timer_timeout"]
