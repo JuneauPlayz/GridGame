@@ -132,7 +132,9 @@ func start_fight2():
 	#await get_tree().create_timer(2.0).timeout
 	#await attack("outer_ring", 2.0)
 	#await attack("righty", 2.0)
-
+	
+	await get_tree().create_timer(1.0).timeout
+	await attack("lefty", 2.0)
 	await get_tree().create_timer(3.0).timeout
 	start_cast_timer("Turning Point", 2.0)
 	await get_tree().create_timer(2.0).timeout

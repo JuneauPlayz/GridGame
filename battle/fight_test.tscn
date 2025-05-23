@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://sfxgelxxb330"]
+[gd_scene load_steps=8 format=3 uid="uid://sfxgelxxb330"]
 
 [ext_resource type="Script" uid="uid://pohkt4s83bcx" path="res://battle/fight_test.gd" id="1_dem6r"]
 [ext_resource type="PackedScene" uid="uid://dn363pv1csx7h" path="res://battle/player.tscn" id="2_bri15"]
 [ext_resource type="Script" uid="uid://6gvo4vikylrw" path="res://battle/grid_helper.gd" id="3_bri15"]
 [ext_resource type="PackedScene" uid="uid://bqm4owe6u0ymn" path="res://enemy1.tscn" id="4_af8yq"]
+[ext_resource type="PackedScene" uid="uid://dhcdbarguf22r" path="res://abilities.tscn" id="5_mjcj8"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_bri15"]
 font_size = 46
@@ -78,5 +79,11 @@ label_settings = SubResource("LabelSettings_af8yq")
 
 [node name="Enemy" parent="." instance=ExtResource("4_af8yq")]
 position = Vector2(-180, -77)
+
+[node name="Abilities" parent="." instance=ExtResource("5_mjcj8")]
+offset_left = 697.0
+offset_top = 928.0
+offset_right = 697.0
+offset_bottom = 928.0
 
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
