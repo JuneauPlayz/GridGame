@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://sfxgelxxb330"]
+[gd_scene load_steps=10 format=3 uid="uid://sfxgelxxb330"]
 
 [ext_resource type="Script" uid="uid://pohkt4s83bcx" path="res://battle/fight_test.gd" id="1_dem6r"]
 [ext_resource type="PackedScene" uid="uid://dn363pv1csx7h" path="res://battle/player.tscn" id="2_bri15"]
@@ -14,6 +14,14 @@ outline_color = Color(0, 0, 0, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_af8yq"]
 font_size = 54
 outline_size = 12
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oej44"]
+bg_color = Color(0.722833, 0.194868, 0.348564, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_oej44"]
+font_size = 26
+outline_size = 8
 outline_color = Color(0, 0, 0, 1)
 
 [node name="FightTest" type="Node2D"]
@@ -86,4 +94,26 @@ offset_top = 928.0
 offset_right = 697.0
 offset_bottom = 928.0
 
+[node name="EnemyHPBar" type="ProgressBar" parent="."]
+offset_left = 677.0
+offset_top = 17.0
+offset_right = 1307.0
+offset_bottom = 44.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_oej44")
+
+[node name="EnemyHPLabel" type="Label" parent="."]
+offset_left = 430.0
+offset_top = 11.0
+offset_right = 663.0
+offset_bottom = 47.0
+text = "Enemy HP 100/100"
+label_settings = SubResource("LabelSettings_oej44")
+
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
+[connection signal="moved" from="Player" to="." method="_on_player_moved"]
+[connection signal="damage_taken" from="Enemy" to="." method="_on_enemy_damage_taken"]
+[connection signal="dead" from="Enemy" to="." method="_on_enemy_dead"]
+[connection signal="ability_1_used" from="Abilities" to="." method="_on_abilities_ability_1_used"]
+[connection signal="ability_2_used" from="Abilities" to="." method="_on_abilities_ability_2_used"]
+[connection signal="ability_3_used" from="Abilities" to="." method="_on_abilities_ability_3_used"]
+[connection signal="ability_4_used" from="Abilities" to="." method="_on_abilities_ability_4_used"]

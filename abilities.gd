@@ -26,6 +26,14 @@ var ability_2_ready = true
 var ability_3_ready = true
 var ability_4_ready = true
 
+signal ability_1_used
+signal ability_2_used
+signal ability_3_used
+signal ability_4_used
+
+var ability_1_dmg = 5
+var ability_2_dmg = 10
+
 func _ready():
 	# Initialize bars and timers
 	_init_ability(ability_1_bar, timer1, cooldown_1)
@@ -71,18 +79,22 @@ func _update_cooldown(timer: Timer, bar: ProgressBar, label: Label):
 func use_ability_1():
 	ability_1_ready = false
 	timer1.start()
+	ability_1_used.emit()
 
 func use_ability_2():
 	ability_2_ready = false
 	timer2.start()
+	ability_2_used.emit()
 
 func use_ability_3():
 	ability_3_ready = false
 	timer3.start()
+	ability_3_used.emit()
 
 func use_ability_4():
 	ability_4_ready = false
 	timer4.start()
+	ability_4_used.emit()
 
 func _on_timer_timeout():
 	ability_1_ready = true

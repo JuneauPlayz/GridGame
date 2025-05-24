@@ -132,3 +132,31 @@ func get_middle_ring() -> Array:
 		result.append(grid_arr[r][end])         # right of middle ring
 
 	return result
+
+func get_cross(x, y):
+	var result = []
+	for platform in get_row(y):
+		result.append(platform)
+	for platform in get_col(x):
+		result.append(platform)
+	return result
+	
+func get_sides(x, y) -> Array:
+	var result = []
+	var rows = grid_arr.size()
+	var cols = grid_arr[0].size()
+
+	for dy in range(-1, 2):  # -1, 0, 1
+		for dx in range(-1, 2):
+			if dx == 0 and dy == 0:
+				continue  # Skip center tile
+
+			var nx = x + dx
+			var ny = y + dy
+
+			if nx >= 0 and nx < cols and ny >= 0 and ny < rows:
+				result.append(grid_arr[ny][nx])
+
+	return result
+
+	

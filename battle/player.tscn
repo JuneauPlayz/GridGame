@@ -18,4 +18,56 @@ color = Color(0.349551, 0.426503, 0.613229, 1)
 [node name="InvulnTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="Ability1" type="Node2D" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="Ability1"]
+offset_left = -144.0
+offset_top = -141.0
+offset_right = 163.0
+offset_bottom = 170.0
+color = Color(1, 0, 0, 0.196078)
+
+[node name="Ability2" type="Node2D" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="Ability2"]
+offset_left = 7.0
+offset_top = -1301.0
+offset_right = 16.0
+offset_bottom = -4.0
+color = Color(1, 0, 0.380392, 0.584314)
+
+[node name="ColorRect2" type="ColorRect" parent="Ability2"]
+offset_left = -1.0
+offset_top = 6.0
+offset_right = 8.0
+offset_bottom = 1303.0
+rotation = 1.5708
+color = Color(1, 0, 0.380392, 0.584314)
+
+[node name="ColorRect3" type="ColorRect" parent="Ability2"]
+offset_left = 16.0
+offset_top = 1322.0
+offset_right = 25.0
+offset_bottom = 2619.0
+rotation = 3.14159
+color = Color(1, 0, 0.380392, 0.584314)
+
+[node name="ColorRect4" type="ColorRect" parent="Ability2"]
+offset_left = 26.0
+offset_top = 15.0
+offset_right = 35.0
+offset_bottom = 1312.0
+rotation = 4.71239
+color = Color(1, 0, 0.380392, 0.584314)
+
+[node name="Effect" type="Label" parent="."]
+visible = false
+offset_left = -8.0
+offset_top = -28.0
+offset_right = 34.0
+offset_bottom = -5.0
+text = "dash!"
+
 [connection signal="timeout" from="InvulnTimer" to="." method="_on_invuln_timer_timeout"]

@@ -7,6 +7,8 @@ extends Node2D
 var orange = Color("#bf5a1b75")
 var white = Color("#616161")
 
+var is_enemy = false
+
 var flash_tween
 
 func set_size(width, length):
@@ -48,3 +50,6 @@ func _flash_sequence(length) -> void:
 		
 func get_state():
 	return state_machine.current_state
+
+func set_enemy(x):
+	is_enemy = x
