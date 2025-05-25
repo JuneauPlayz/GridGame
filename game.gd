@@ -6,6 +6,8 @@ var difficulty = ""
 const FIGHT_TEST = preload("res://battle/fight_test.tscn")
 const START_SCREEN = preload("res://start_screen.tscn")
 
+var movement_type = 1
+
 func _ready():
 	new_scene(START_SCREEN)
 	
