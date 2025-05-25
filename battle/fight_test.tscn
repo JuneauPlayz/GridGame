@@ -1,10 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://sfxgelxxb330"]
+[gd_scene load_steps=12 format=3 uid="uid://sfxgelxxb330"]
 
 [ext_resource type="Script" uid="uid://pohkt4s83bcx" path="res://battle/fight_test.gd" id="1_dem6r"]
 [ext_resource type="PackedScene" uid="uid://dn363pv1csx7h" path="res://battle/player.tscn" id="2_bri15"]
 [ext_resource type="Script" uid="uid://6gvo4vikylrw" path="res://battle/grid_helper.gd" id="3_bri15"]
 [ext_resource type="PackedScene" uid="uid://bqm4owe6u0ymn" path="res://enemy1.tscn" id="4_af8yq"]
 [ext_resource type="PackedScene" uid="uid://dhcdbarguf22r" path="res://abilities.tscn" id="5_mjcj8"]
+[ext_resource type="PackedScene" uid="uid://dau3oisupgvjk" path="res://clock.tscn" id="6_oej44"]
+[ext_resource type="PackedScene" uid="uid://do65o1ap75xmu" path="res://result_screen.tscn" id="7_3xm3i"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_bri15"]
 font_size = 46
@@ -49,9 +51,9 @@ script = ExtResource("3_bri15")
 
 [node name="CastTimers" type="VBoxContainer" parent="."]
 offset_left = 730.0
-offset_top = 32.0
+offset_top = 42.0
 offset_right = 730.0
-offset_bottom = 32.0
+offset_bottom = 42.0
 theme_override_constants/separation = 75
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -109,6 +111,15 @@ offset_bottom = 47.0
 text = "Enemy HP 100/100"
 label_settings = SubResource("LabelSettings_oej44")
 
+[node name="Clock" parent="." instance=ExtResource("6_oej44")]
+offset_left = 7.0
+offset_right = 7.0
+
+[node name="ResultScreen" parent="." instance=ExtResource("7_3xm3i")]
+visible = false
+position = Vector2(712, 444)
+
+[connection signal="dead" from="Player" to="." method="_on_player_dead"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
 [connection signal="moved" from="Player" to="." method="_on_player_moved"]
 [connection signal="damage_taken" from="Enemy" to="." method="_on_enemy_damage_taken"]

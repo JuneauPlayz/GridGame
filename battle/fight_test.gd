@@ -11,6 +11,8 @@ const CAST_TIMER = preload("res://cast_timer.tscn")
 @onready var abilities: Control = $Abilities
 @onready var enemy_hp_bar: ProgressBar = $EnemyHPBar
 @onready var enemy_hp_label: Label = $EnemyHPLabel
+@onready var result_screen: Node2D = $ResultScreen
+@onready var clock: Control = $Clock
 
 var grid_arr = []
 
@@ -22,7 +24,9 @@ var cols = 6
 var platform_size = 75
 var player_size = 25
 
+var current_enemy_rotation = 0
 var current_player_side = ""
+var game_over = false
 
 func _ready():
 	game = get_tree().get_first_node_in_group("game")
@@ -33,126 +37,104 @@ func _ready():
 	player.player_size = player_size
 	move_player(0,0)
 	player.current_platform = grid_arr[0][0]
+	result_screen.visible = false
 	set_enemy()
-	start_fight2()
-	
-func start_fight():
-	var current_attack = []
-	start_cast_timer("Attack 1", 2.0)
-	await get_tree().create_timer(2).timeout
-	for platform in grid_helper.get_col(0):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_col(4):
-		platform.transition("PlatformOrange",3)
-	
-	start_cast_timer("Attack 2", 2.0)
-	await get_tree().create_timer(2).timeout
-	for platform in grid_helper.get_col(2):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_col(3):
-		platform.transition("PlatformOrange",3)
-	
-	
-	await get_tree().create_timer(3.5).timeout
-	start_cast_timer("Attack 3", 2.0)
-	await get_tree().create_timer(2.0).timeout
-	for platform in grid_helper.get_diagonal(2):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_diagonal(1):
-		platform.transition("PlatformOrange",3)
-		
-	await get_tree().create_timer(3.5).timeout
-	start_cast_timer("Attack 4", 3.0)
-	await get_tree().create_timer(3.0).timeout
-	for platform in grid_helper.get_diagonal(1):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_row(1):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_row(3):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_row(5):
-		platform.transition("PlatformOrange",3)
-		
-	await get_tree().create_timer(3.5).timeout
-	start_cast_timer("Attack 5", 3.0)
-	await get_tree().create_timer(3.0).timeout
-	for platform in grid_helper.get_row(0):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_row(2):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_row(4):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_col(0):
-		platform.transition("PlatformOrange",3)
-	for platform in grid_helper.get_col(4):
-		platform.transition("PlatformOrange",3)
-		
-func start_fight2():
+	randomize()
+
+func start_fight(difficulty):
+	AudioPlayer.play_music_level()
+	move_player(0,0)
+	print(difficulty)
 	enemy.new_weakpoint()
 	
 	for platform in grid_helper.get_mid_block():
 		platform.transition("PlatformBlack", -1)
 		platform.visible = false
 		platform.set_enemy(true)
-
-	#await get_tree().create_timer(0.5).timeout
-	#await attack("lefty", 2.0)
-	#await get_tree().create_timer(0.5).timeout
-	#await attack("righty", 2.0)
-	#await get_tree().create_timer(0.5).timeout
-	#await attack("uppercut", 2.0)
-	#await get_tree().create_timer(0.5).timeout
-	#await attack("low_blow", 2.0)
-
-	#await get_tree().create_timer(2.0).timeout
-	#attack("lefty", 2.0)
-	#await get_tree().create_timer(1.75).timeout
-	#attack("righty", 2.0)
-	#await get_tree().create_timer(1.75).timeout
-	#attack("lefty", 2.0)
-	#await get_tree().create_timer(3).timeout
-	#start_cast_timer("Fakeout", 2.0)
-	#await get_tree().create_timer(2.5).timeout
-	#await attack("lefty", 2.0, true)
-	#await get_tree().create_timer(3).timeout
-	#start_cast_timer("Fakeout", 2.0)
-	#await get_tree().create_timer(2.5).timeout
-	#await attack("uppercut", 2.0, true)
-#
-	#await get_tree().create_timer(2.0).timeout
-	#await attack("inner_ring", 2.0)
-	#await get_tree().create_timer(3.0).timeout
-	#await attack("outer_ring", 2.0)
-#
-	#await get_tree().create_timer(3.0).timeout
-	#attack("outer_ring", 2.0)
-	#attack("lefty", 2.0)
-#
-	#await get_tree().create_timer(4.0).timeout
-	#attack("inner_ring", 2.0)
-	#attack("lefty", 2.0)
-	#attack("low_blow", 2.0)
-
-	await get_tree().create_timer(4.0).timeout
-	attack("inner_ring", 2.0)
+		
+	#first attack
+	await delay(1.0)
 	attack("lefty", 2.0)
-
-	await get_tree().create_timer(4.0).timeout
-	attack("outer_ring", 2.0)
+	await delay(3.0)
 	attack("righty", 2.0)
-	
-	await get_tree().create_timer(1.75).timeout
-	await attack("lefty", 2.0)
-	await get_tree().create_timer(3.0).timeout
+	await delay(3.0)
+	attack("uppercut", 2.0)
+	await delay(3.0)
+	attack("low_blow", 2.0)
+	await delay(3.0)
+	attack("lefty", 2.0)
+	await delay(1.5)
+	attack("righty",2.0)
+	await delay(1.5)
+	attack("lefty",2.0)
+	await delay(3.0)
+	attack("inner_ring", 2.0)
+	await delay(3.0)
+	attack("outer_ring", 2.0)
+	await delay(3.0)
+	attack("outer_ring", 2.0)
+	attack("lefty", 2.0)
+	await delay(3.5)
+	attack("righty", 2.0)
+	attack("uppercut", 2.0)
+	await delay(3.5)
+	start_cast_timer("Fakeout", 2.0)
+	await delay(2.5)
+	attack("lefty", 2.0, true)
+	await delay(3.5)
 	start_cast_timer("Turning Point", 2.0)
-	await get_tree().create_timer(2.0).timeout
+	await delay(2.0)
 	rotate_enemy(90)
-	await get_tree().create_timer(1.0).timeout
-	await attack("lefty", 2.0)
-	await get_tree().create_timer(1.0).timeout
-	await attack("uppercut", 2.0)
+	await delay(1.0)
+	attack("lefty", 2.0)
+	await delay(3.0)
+	attack("uppercut", 2.0)
+	await delay(3.0)
+	start_cast_timer("Fakeout", 2.0)
+	await delay(2.0)
+	attack("righty", 2.0, true)
+	await delay(2.0)
+	while (game_over == false):
+		start_cast_timer("Turning Point", 2.0)
+		await delay(2.0)
+		rotate_enemy(current_enemy_rotation + 90)
+		await delay(1.0)
+		random_double(2.0)
+		await delay(3.0)
+		random_side(2.0)
+		attack("inner_ring", 2.0)
+		await delay(3.0)
+		random_double(2.0)
+		await delay(2.0)
+		random_side(2.0)
+		attack("outer_ring", 2.0)
+		await delay(2.0)
+	
+func random_side(cast_time):
+	var atk1 = [
+		["attack", "lefty", cast_time],
+		["attack", "righty", cast_time],
+		["attack", "uppercut", cast_time],
+		["attack", "low_blow", cast_time]
+	]
+
+	var choice = atk1[randi() % atk1.size()]
+	call(choice[0], choice[1], choice[2])
+
+func random_double(cast_time):
+	var sides = ["lefty", "righty"]
+	var verticals = ["uppercut", "low_blow"]
+
+	var side_choice = sides[randi() % sides.size()]
+	var vertical_choice = verticals[randi() % verticals.size()]
+
+	call("attack", side_choice, cast_time)
+	call("attack", vertical_choice, cast_time)
+
 
 func attack(name: String, cast_time: float, fakeout := false):
+	if game_over:
+		return
 	var mapped_attack = get_mapped_attack(name, fakeout)
 	start_cast_timer(name.capitalize(), cast_time)
 	await get_tree().create_timer(cast_time).timeout
@@ -171,10 +153,12 @@ func attack(name: String, cast_time: float, fakeout := false):
 			targets = grid_helper.get_outer_ring()
 		"inner_ring":
 			targets = grid_helper.get_middle_ring()
-
+	
 	for platform in targets:
 		platform.transition("PlatformOrange", 1)
-
+	await get_tree().create_timer(1).timeout
+	AudioPlayer.play_FX("punch")
+	
 func get_mapped_attack(name: String, fakeout: bool) -> String:
 	var angle = int(round(rad_to_deg(enemy.rotation))) % 360
 	if angle % 90 != 0:
@@ -210,10 +194,13 @@ func get_mapped_attack(name: String, fakeout: bool) -> String:
 
 func rotate_enemy(deg):
 	enemy.rotation = deg_to_rad(deg)
+	current_enemy_rotation = deg
 	set_player_side()
 
 	
 func start_cast_timer(name, length):
+	if game_over:
+		return
 	var new_cast_timer = CAST_TIMER.instantiate()
 	new_cast_timer.call_deferred("start", name, length)
 	cast_timers.add_child(new_cast_timer)
@@ -264,36 +251,49 @@ func set_enemy():
 	enemy_hp_bar.max_value = enemy.health
 	enemy_hp_bar.value = enemy.health
 	enemy_hp_label.text = "Enemy HP: " + str(enemy.health) + "/" + str(enemy.max_health)
+
+func delay(time) -> void:
+	await get_tree().create_timer(time).timeout
 	
 func _on_abilities_ability_1_used() -> void:
+	if game_over:
+		return
 	var enemy_hit = false
 	for platform in grid_helper.get_sides(player.player_x, player.player_y):
 		if platform.is_enemy:
 			enemy_hit = true
 	if enemy_hit:
 		enemy.take_damage(abilities.ability_1_dmg)
+		AudioPlayer.play_FX("punch", -15.0)
 	player.ability_1()
 	AudioPlayer.play_FX("click")
 
 func _on_abilities_ability_2_used() -> void:
+	if game_over:
+		return
 	var enemy_hit = false
 	for platform in grid_helper.get_cross(player.player_x, player.player_y):
 		if platform.is_enemy:
 			enemy_hit = true
 	if enemy_hit:
 		enemy.take_damage(abilities.ability_2_dmg)
+		AudioPlayer.play_FX("punch", -20.0)
 	player.ability_2()
 	AudioPlayer.play_FX("click")
 	
 func _on_abilities_ability_3_used() -> void:
+	if game_over:
+		return
 	player.activate_dash()
 	player.ability_3()
-	AudioPlayer.play_FX("click")
+	AudioPlayer.play_FX("start_dash")
 
 
 func _on_abilities_ability_4_used() -> void:
+	if game_over:
+		return
 	player.ability_4()
-	AudioPlayer.play_FX("click")
+	AudioPlayer.play_FX("invuln")
 
 
 func _on_enemy_damage_taken() -> void:
@@ -305,7 +305,7 @@ func _on_enemy_damage_taken() -> void:
 		AudioPlayer.play_FX("fiora")
 
 func _on_enemy_dead() -> void:
-	pass # Replace with function body.
+	result("victory")
 
 
 func _on_player_moved() -> void:
@@ -338,3 +338,14 @@ func set_player_side():
 	var mapped = rotation_map.get(angle, rotation_map[0])
 	current_player_side = mapped.get(local_side, "none")
 	print(current_player_side)
+
+
+func _on_player_dead() -> void:
+	result("defeat")
+	
+func result(res):
+	game_over = true
+	player.queue_free()
+	result_screen.visible = true
+	clock.stop()
+	result_screen.set_result(res, clock.get_time_formatted(), player.health)

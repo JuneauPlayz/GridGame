@@ -1,7 +1,7 @@
 extends Node2D
 
-@export var health = 300
-@export var max_health = 300
+@export var health = 350
+@export var max_health = 350
 @onready var weakpoint: Node2D = $Weakpoint
 
 
@@ -9,7 +9,7 @@ signal dead
 signal damage_taken
 
 var weakpoint_side = ""
-var weakpoint_damage = 5
+var weakpoint_damage = 3
 
 func take_damage(amt):
 	health -= amt

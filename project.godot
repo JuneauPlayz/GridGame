@@ -30,6 +30,10 @@ window/size/borderless=true
 
 enabled=PackedStringArray("res://addons/polygon2d_tool/plugin.cfg")
 
+[global_group]
+
+game=""
+
 [input]
 
 up={

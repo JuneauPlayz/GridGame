@@ -23,6 +23,7 @@ var dash_distance = 3
 
 signal health_changed
 signal moved
+signal dead
 
 var dash = false
 var last_move = "none"
@@ -51,6 +52,7 @@ func _attempt_move(direction: Vector2i):
 	if dash == true:
 		max_steps = dash_distance
 		dash = false
+		AudioPlayer.play_FX("dash")
 	else:
 		max_steps = move_distance
 	
@@ -84,11 +86,12 @@ func move_player(x, y):
 	var target_pos = grid[y][x].get_pos() + Vector2(platform_size/2, platform_size/2) - Vector2(player_size/2, player_size/2)
 	tween = create_tween()
 	is_moving = true
+	moved.emit()
 	tween.tween_property(self, "global_position", target_pos, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	await tween.finished
 	is_moving = false
 	current_platform = grid[y][x]
-	moved.emit()
+
 
 func take_damage(amt):
 	lose_health(amt)
@@ -98,6 +101,8 @@ func take_damage(amt):
 func lose_health(amt):
 	health -= amt
 	health_changed.emit()
+	if health <= 0:
+		dead.emit()
 
 func activate_dash():
 	dash = true

@@ -1,0 +1,101 @@
+[gd_scene load_steps=7 format=3 uid="uid://62w6pomk2whe"]
+
+[ext_resource type="Script" uid="uid://bu132ja22y3d4" path="res://start_screen.gd" id="1_ncxyx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hsg2v"]
+font_size = 81
+
+[sub_resource type="LabelSettings" id="LabelSettings_ncxyx"]
+font_size = 51
+
+[sub_resource type="LabelSettings" id="LabelSettings_pevhg"]
+font_size = 21
+
+[sub_resource type="LabelSettings" id="LabelSettings_afy8x"]
+font_size = 31
+
+[sub_resource type="LabelSettings" id="LabelSettings_k1na2"]
+font_size = 31
+
+[node name="StartScreen" type="Node2D"]
+script = ExtResource("1_ncxyx")
+
+[node name="Title" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 675.0
+offset_top = 67.0
+offset_right = 1137.0
+offset_bottom = 178.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+text = "CartGame 2"
+label_settings = SubResource("LabelSettings_hsg2v")
+
+[node name="Normal" type="Button" parent="."]
+offset_left = 178.0
+offset_top = 361.0
+offset_right = 455.0
+offset_bottom = 457.0
+theme_override_font_sizes/font_size = 51
+text = "Normal"
+
+[node name="Savage" type="Button" parent="."]
+offset_left = 176.0
+offset_top = 507.0
+offset_right = 453.0
+offset_bottom = 603.0
+theme_override_colors/font_color = Color(0.572549, 0, 0.168627, 1)
+theme_override_font_sizes/font_size = 51
+text = "Savage"
+
+[node name="Fight1" type="Label" parent="."]
+offset_left = 224.0
+offset_top = 257.0
+offset_right = 407.0
+offset_bottom = 327.0
+text = "Fight 1"
+label_settings = SubResource("LabelSettings_ncxyx")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 509.0
+offset_top = 386.0
+offset_right = 899.0
+offset_bottom = 416.0
+text = "Do normal first to learn the mechanics"
+label_settings = SubResource("LabelSettings_pevhg")
+
+[node name="Label2" type="Label" parent="."]
+offset_left = 950.0
+offset_top = 790.0
+offset_right = 1885.0
+offset_bottom = 1121.0
+text = "Abilities:
+Q - AOE blocks surrounding you
+W - fires lasers in all 4 cardinal directions
+E - Activates a dash, your next movement input will go 3 blocks
+R - Invincibility for 1 sec"
+label_settings = SubResource("LabelSettings_afy8x")
+
+[node name="Label3" type="Label" parent="."]
+offset_left = 58.0
+offset_top = 634.0
+offset_right = 711.0
+offset_bottom = 721.0
+text = "Mechanic: Boss has fiora weakpoints on em"
+label_settings = SubResource("LabelSettings_k1na2")
+
+[node name="Label4" type="Label" parent="."]
+offset_left = 487.0
+offset_top = 523.0
+offset_right = 1140.0
+offset_bottom = 610.0
+text = "savage not implemented yet"
+label_settings = SubResource("LabelSettings_k1na2")
+
+[connection signal="pressed" from="Normal" to="." method="_on_normal_pressed"]
+[connection signal="pressed" from="Savage" to="." method="_on_savage_pressed"]

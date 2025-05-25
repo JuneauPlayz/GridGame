@@ -1,0 +1,82 @@
+[gd_scene load_steps=7 format=3 uid="uid://do65o1ap75xmu"]
+
+[ext_resource type="Script" uid="uid://dbpdvdpgewi7y" path="res://result_screen.gd" id="1_e2y21"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nl1et"]
+bg_color = Color(0.509841, 0.636498, 0.556593, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_e2y21"]
+font_size = 26
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_u5ed4"]
+font_size = 31
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_oiqpt"]
+outline_size = 6
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oiqpt"]
+
+[node name="ResultScreen" type="Node2D"]
+script = ExtResource("1_e2y21")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 269.0
+offset_bottom = 203.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nl1et")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Result" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Victory!"
+label_settings = SubResource("LabelSettings_e2y21")
+horizontal_alignment = 1
+
+[node name="Time" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Time:"
+label_settings = SubResource("LabelSettings_u5ed4")
+
+[node name="HealthLeft" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Health Left:"
+label_settings = SubResource("LabelSettings_oiqpt")
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 55
+theme_override_styles/separator = SubResource("StyleBoxFlat_oiqpt")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="MainMenu" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Back to Main Menu"
+
+[node name="Restart" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Retry"
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Restart" to="." method="_on_restart_pressed"]

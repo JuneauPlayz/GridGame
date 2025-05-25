@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c02udj8mvsa54"
+path="res://.godot/imported/fiora passive real.mp3-6f4bd4047e48dbd75f2e3d37d2f2bf43.mp3str"
+
+[deps]
+
+source_file="res://sounds/fiora passive real.mp3"
+dest_files=["res://.godot/imported/fiora passive real.mp3-6f4bd4047e48dbd75f2e3d37d2f2bf43.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

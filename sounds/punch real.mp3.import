@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bjprxxnlloxvv"
+path="res://.godot/imported/punch real.mp3-b3e4aed3927d6a729649332276800b5f.mp3str"
+
+[deps]
+
+source_file="res://sounds/punch real.mp3"
+dest_files=["res://.godot/imported/punch real.mp3-b3e4aed3927d6a729649332276800b5f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

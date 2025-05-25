@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://dau3oisupgvjk"]
+
+[ext_resource type="Script" uid="uid://bjtq5e5ctr12v" path="res://clock.gd" id="1_venu5"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_kig64"]
+font_size = 52
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Clock" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_venu5")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 260.0
+offset_bottom = 77.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 55.0
+offset_right = 206.0
+offset_bottom = 72.0
+
+[node name="Minutes" type="Label" parent="Panel/HBoxContainer"]
+layout_mode = 2
+text = "00: "
+label_settings = SubResource("LabelSettings_kig64")
+
+[node name="Seconds" type="Label" parent="Panel/HBoxContainer"]
+layout_mode = 2
+text = "00"
+label_settings = SubResource("LabelSettings_kig64")

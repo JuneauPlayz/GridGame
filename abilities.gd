@@ -16,7 +16,7 @@ extends Control
 @onready var time_left_3: Label = $HBoxContainer/Ability3/ProgressBar3/Label3
 @onready var time_left_4: Label = $HBoxContainer/Ability4/ProgressBar4/Label4
 
-var cooldown_1 = 2.0
+var cooldown_1 = 1.5
 var cooldown_2 = 5.0
 var cooldown_3 = 10.0
 var cooldown_4 = 20.0
@@ -31,7 +31,7 @@ signal ability_2_used
 signal ability_3_used
 signal ability_4_used
 
-var ability_1_dmg = 5
+var ability_1_dmg = 3
 var ability_2_dmg = 10
 
 func _ready():

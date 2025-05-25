@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://d4b4c3l4w6aq8"
+path="res://.godot/imported/Survivor - Eye of the Tiger [Instrumental].mp3-d8bf1d60676fd4bcc5149b64bc871042.mp3str"
+
+[deps]
+
+source_file="res://sounds/Survivor - Eye of the Tiger [Instrumental].mp3"
+dest_files=["res://.godot/imported/Survivor - Eye of the Tiger [Instrumental].mp3-d8bf1d60676fd4bcc5149b64bc871042.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
