@@ -3,12 +3,15 @@ extends Control
 @onready var minutes_label: Label = $Panel/HBoxContainer/Minutes
 @onready var seconds_label: Label = $Panel/HBoxContainer/Seconds
 
+@onready var fight_manager: Node = $"../FightManager"
 
 var time: float = 0.0
 var minutes: int = 0
 var seconds: int = 0
 var msec: int = 0
 func _process(delta) -> void:
+	if fight_manager.fight_paused == true:
+		return
 	time += delta
 	msec = fmod(time, 1) * 100
 	seconds = fmod(time, 60)

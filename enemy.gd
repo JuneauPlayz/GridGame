@@ -11,6 +11,9 @@ signal damage_taken
 var weakpoint_side = ""
 var weakpoint_damage = 3
 
+func _ready():
+	weakpoint.visible = false
+	
 func take_damage(amt):
 	health -= amt
 	damage_taken.emit()
@@ -18,6 +21,8 @@ func take_damage(amt):
 		dead.emit()
 
 func set_weakpoint(side):
+	if weakpoint.visible == false:
+		weakpoint.visible = true
 	match side:
 		"front":
 			weakpoint.rotation = deg_to_rad(270)

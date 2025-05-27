@@ -14,8 +14,9 @@ func _on_main_menu_pressed() -> void:
 
 
 func _on_restart_pressed() -> void:
+	game.new_scene(game.START_SCREEN)
 	var fight = game.new_scene(game.FIGHT_TEST)
-	fight.start_fight(game.difficulty)
+	fight.set_difficulty(game.difficulty)
 
 func set_result(result, time, health):
 	match result:

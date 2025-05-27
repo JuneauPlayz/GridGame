@@ -1,12 +1,14 @@
-[gd_scene load_steps=12 format=3 uid="uid://sfxgelxxb330"]
+[gd_scene load_steps=14 format=3 uid="uid://sfxgelxxb330"]
 
 [ext_resource type="Script" uid="uid://pohkt4s83bcx" path="res://battle/fight_test.gd" id="1_dem6r"]
 [ext_resource type="PackedScene" uid="uid://dn363pv1csx7h" path="res://battle/player.tscn" id="2_bri15"]
+[ext_resource type="Script" uid="uid://cxri03c7fxdfu" path="res://battle/fight_manager.gd" id="2_pbfxh"]
 [ext_resource type="Script" uid="uid://6gvo4vikylrw" path="res://battle/grid_helper.gd" id="3_bri15"]
 [ext_resource type="PackedScene" uid="uid://bqm4owe6u0ymn" path="res://enemy1.tscn" id="4_af8yq"]
 [ext_resource type="PackedScene" uid="uid://dhcdbarguf22r" path="res://abilities.tscn" id="5_mjcj8"]
 [ext_resource type="PackedScene" uid="uid://dau3oisupgvjk" path="res://clock.tscn" id="6_oej44"]
 [ext_resource type="PackedScene" uid="uid://do65o1ap75xmu" path="res://result_screen.tscn" id="7_3xm3i"]
+[ext_resource type="PackedScene" uid="uid://b11r4goiku2b5" path="res://countdown.tscn" id="9_51cqs"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_bri15"]
 font_size = 46
@@ -26,8 +28,11 @@ font_size = 26
 outline_size = 8
 outline_color = Color(0, 0, 0, 1)
 
-[node name="FightTest" type="Node2D"]
+[node name="FightScene" type="Node2D"]
 script = ExtResource("1_dem6r")
+
+[node name="FightManager" type="Node" parent="."]
+script = ExtResource("2_pbfxh")
 
 [node name="Player" parent="." instance=ExtResource("2_bri15")]
 
@@ -118,6 +123,12 @@ offset_right = 7.0
 [node name="ResultScreen" parent="." instance=ExtResource("7_3xm3i")]
 visible = false
 position = Vector2(712, 444)
+
+[node name="Countdown" parent="." instance=ExtResource("9_51cqs")]
+offset_left = 945.0
+offset_top = 4.0
+offset_right = 945.0
+offset_bottom = 4.0
 
 [connection signal="dead" from="Player" to="." method="_on_player_dead"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]

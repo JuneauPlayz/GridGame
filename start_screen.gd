@@ -7,8 +7,10 @@ func _ready():
 
 func _on_normal_pressed() -> void:
 	var fight = game.new_scene(game.FIGHT_TEST)
-	fight.start_fight("normal")
+	fight.set_difficulty("normal")
 	game.difficulty = "normal"
 
 func _on_savage_pressed() -> void:
-	pass # Replace with function body.
+	var fight = game.new_scene(game.FIGHT_TEST)
+	fight.set_difficulty("savage")
+	game.difficulty = "savage"

@@ -53,3 +53,4 @@ func get_state():
 
 func set_enemy(x):
 	is_enemy = x
+	self.visible = false

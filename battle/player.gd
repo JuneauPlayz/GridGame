@@ -27,8 +27,8 @@ signal dead
 
 var dash = false
 var last_move = "none"
-
-
+var can_move = true
+var silenced = false
 
 func _ready():
 	player_size = sprite.size.x
@@ -42,14 +42,16 @@ func _process(delta):
 		_attempt_move(Vector2i(-1, 0))
 	if Input.is_action_just_pressed("right"):
 		_attempt_move(Vector2i(1, 0))
-
 	if current_platform.get_state() is PlatformRed and is_invuln == false:
 		take_damage(1)
 
 
 func _attempt_move(direction: Vector2i):
+	if not can_move:
+		return
+	var is_dashing = dash
 	var max_steps
-	if dash == true:
+	if is_dashing:
 		max_steps = dash_distance
 		dash = false
 		AudioPlayer.play_FX("dash")
@@ -60,37 +62,50 @@ func _attempt_move(direction: Vector2i):
 	var new_x = player_x
 	var new_y = player_y
 
+	var last_valid_x = player_x
+	var last_valid_y = player_y
+
 	for step in range(1, max_steps + 1):
 		var target_x = player_x + direction.x * step
 		var target_y = player_y + direction.y * step
 
-		# Check bounds
 		if target_y < 0 or target_y >= grid.size() or target_x < 0 or target_x >= grid[0].size():
 			break
 
-		# Check for wall
-		if grid[target_y][target_x].get_state() is PlatformBlack:
-			break
+		var target_platform = grid[target_y][target_x]
 
-		# Valid move
-		new_x = target_x
-		new_y = target_y
+		if is_dashing:
+			if target_platform.get_state() is not PlatformBlack:
+				last_valid_x = target_x
+				last_valid_y = target_y
+			# continue regardless of wall to see if farther tiles are reachable
+		else:
+			if target_platform.get_state() is PlatformBlack:
+				break
+			last_valid_x = target_x
+			last_valid_y = target_y
 
-	if new_x != player_x or new_y != player_y:
-		player_x = new_x
-		player_y = new_y
+
+	if last_valid_x != player_x or last_valid_y != player_y:
+		player_x = last_valid_x
+		player_y = last_valid_y
 		move_player(player_x, player_y)
 
 
+
 func move_player(x, y):
-	var target_pos = grid[y][x].get_pos() + Vector2(platform_size/2, platform_size/2) - Vector2(player_size/2, player_size/2)
+	var target_pos = grid[y][x].get_pos() + Vector2(platform_size / 2, platform_size / 2) - Vector2(player_size / 2, player_size / 2)
 	tween = create_tween()
 	is_moving = true
 	moved.emit()
 	tween.tween_property(self, "global_position", target_pos, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+	# Wait for halfway
+	current_platform = grid[y][x]
+
 	await tween.finished
 	is_moving = false
-	current_platform = grid[y][x]
+
 
 
 func take_damage(amt):
@@ -133,4 +148,3 @@ func effect(text, length):
 	effect_label.visible = true
 	await get_tree().create_timer(length).timeout
 	effect_label.visible = false
-	

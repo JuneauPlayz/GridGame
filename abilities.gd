@@ -5,6 +5,7 @@ extends Control
 @onready var ability_3_bar: ProgressBar = $HBoxContainer/Ability3/ProgressBar3
 @onready var ability_4_bar: ProgressBar = $HBoxContainer/Ability4/ProgressBar4
 
+@onready var player: Node2D = $"../Player"
 
 @onready var timer1: Timer = $HBoxContainer/Ability1/Timer
 @onready var timer2: Timer = $HBoxContainer/Ability2/Timer2
@@ -62,13 +63,13 @@ func _process(delta):
 	if !ability_4_ready:
 		_update_cooldown(timer4, ability_4_bar, time_left_4)
 
-	if Input.is_action_just_pressed("ability1") and ability_1_ready:
+	if Input.is_action_just_pressed("ability1") and ability_1_ready and not player.silenced:
 		use_ability_1()
-	if Input.is_action_just_pressed("ability2") and ability_2_ready:
+	if Input.is_action_just_pressed("ability2") and ability_2_ready and not player.silenced:
 		use_ability_2()
-	if Input.is_action_just_pressed("ability3") and ability_3_ready:
+	if Input.is_action_just_pressed("ability3") and ability_3_ready and not player.silenced:
 		use_ability_3()
-	if Input.is_action_just_pressed("ability4") and ability_4_ready:
+	if Input.is_action_just_pressed("ability4") and ability_4_ready and not player.silenced:
 		use_ability_4()
 
 func _update_cooldown(timer: Timer, bar: ProgressBar, label: Label):

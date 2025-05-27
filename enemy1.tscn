@@ -32,6 +32,7 @@ position = Vector2(0, -93.6667)
 polygon = PackedVector2Array(-2.93906e-15, -16, 13.8564, 8, -13.8564, 8, -6.8578e-15, -16)
 
 [node name="Weakpoint" type="Node2D" parent="."]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="Weakpoint"]
 offset_left = 74.6667

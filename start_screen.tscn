@@ -82,9 +82,9 @@ R - Invincibility for 1 sec"
 label_settings = SubResource("LabelSettings_afy8x")
 
 [node name="Label5" type="Label" parent="."]
-offset_left = 217.0
+offset_left = 218.0
 offset_top = 871.0
-offset_right = 1152.0
+offset_right = 1153.0
 offset_bottom = 1202.0
 text = "Arrow keys or I J K L to move
 "
