@@ -11,6 +11,8 @@ signal damage_taken
 var weakpoint_side = ""
 var weakpoint_damage = 3
 
+var first_weakpoint = true
+
 func _ready():
 	weakpoint.visible = false
 	
@@ -34,9 +36,18 @@ func set_weakpoint(side):
 			weakpoint.rotation = deg_to_rad(0)
 
 func new_weakpoint():
-	var sides = ["front", "back", "left", "right"]
+	var sides
+	if not first_weakpoint:
+		sides = ["front", "back", "left", "right"]
+	else:
+		sides = ["front", "left"]
+		first_weakpoint = false
 	sides.erase(weakpoint_side)  # Remove the current side
 	var new_side = sides[randi() % sides.size()]
 	set_weakpoint(new_side)
 	weakpoint_side = new_side
 	print("enemy " + weakpoint_side)
+
+func set_max_hp(num):
+	max_health = num
+	health = num

@@ -171,9 +171,55 @@ func savage():
 	attack("inner_ring", 1.5)
 	await delay(2.0)
 	attack("outer_ring", 1.6)
+	await delay(3.0)
+	#330 dmg
+	start_cast_timer("Whirlwind", 2.5)
+	await delay(2.5)
+	for i in 4:
+		start_cast_timer("Turning Point", 1.0)
+		await delay(1.0)
+		turning_point()
+		random_lr(2.0)
+		random_tb(2.0)
+		await delay(2.0)
 	
-	#315 dmg
+	start_cast_timer("Back to Square One", 2.0)
+	await delay(2.0)
+	rotate_enemy(0)
 	
+	start_cast_timer("All Out Attack", 2.0)
+	await delay(2.0)
+	random_lr(1.0)
+	await delay(0.7)
+	random_lr(1.0)
+	await delay(0.7)
+	random_lr(1.0)
+	await delay(0.7)
+	random_lr(1.0)
+	await delay(0.7)
+	random_lr(1.0)
+	await delay(0.7)
+	
+	await delay(1.0)
+	random_tb(1.0)
+	await delay(0.7)
+	random_tb(1.0)
+	await delay(0.7)
+	random_tb(1.0)
+	await delay(0.7)
+	random_tb(1.0)
+	await delay(0.7)
+	random_tb(1.0)
+	await delay(1.75)
+	
+	inner_outer(10,0.81)
+	await delay(10)
+	start_cast_timer("Final Finisher (Enrage)", 6.0)
+	await delay(3.0)
+	while not game_over:
+		random_side(0.3)
+		await delay(0.1)
+
 func attack(name: String, cast_time: float, fakeout := false):
 	if game_over:
 		return
@@ -197,7 +243,7 @@ func attack(name: String, cast_time: float, fakeout := false):
 		AudioPlayer.play_FX("punch")
 	elif difficulty == "savage":
 		for platform in targets:
-			platform.transition("PlatformRed", 0.25)
+			platform.transition("PlatformRed", 0.15)
 		AudioPlayer.play_FX("punch")
 
 func get_mapped_attack(name: String, fakeout: bool) -> String:

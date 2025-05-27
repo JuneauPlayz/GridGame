@@ -84,6 +84,10 @@ func set_enemy():
 	var c = grid_arr[3][2].get_pos() + platform_center_offset
 	var d = grid_arr[3][3].get_pos() + platform_center_offset
 	enemy.global_position = (a + b + c + d) / 4
+	if difficulty == "normal":
+		enemy.set_max_hp(350)
+	elif difficulty == "savage":
+		enemy.set_max_hp(500)
 	enemy_hp_bar.max_value = enemy.health
 	enemy_hp_bar.value = enemy.health
 	enemy_hp_label.text = "Enemy HP: " + str(enemy.health) + "/" + str(enemy.max_health)
@@ -141,6 +145,7 @@ func _on_enemy_dead() -> void:
 
 func result(res):
 	game_over = true
+	fight_manager.game_over = true
 	player.queue_free()
 	result_screen.visible = true
 	clock.stop()
