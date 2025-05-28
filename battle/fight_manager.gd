@@ -1,20 +1,21 @@
 extends Node
 
 @onready var grid_helper: Node = $"../Grid/GridHelper"
-@onready var player: Node2D = $"../Player"
-@onready var cast_timers: VBoxContainer = $"../CastTimers"
+@onready var player: Node2D = %Player
 @onready var enemy: Node2D = $"../Enemy"
+@onready var cast_timers: VBoxContainer = %CastTimers
 
 const CAST_TIMER = preload("res://cast_timer.tscn")
 
 var current_enemy_rotation = 0
 var game_over = false
 var difficulty
+var fight_num = 0
 var fight_paused = true
 var last_random_side
 var fight
 
-func start_fight(difficulty):
+func start_fight(num, difficulty):
 	fight = get_parent()
 	fight_paused = false
 	AudioPlayer.play_music_level()
@@ -25,12 +26,19 @@ func start_fight(difficulty):
 	await get_tree().process_frame
 	randomize()
 	player.global_position = grid_helper.grid_arr[0][0].get_pos()
-	if difficulty == "normal":
-		normal()
-	elif difficulty == "savage":
-		savage()
+	match num:
+		1:
+			if difficulty == "normal":
+				normal_1()
+			elif difficulty == "savage":
+				savage_1()
+		2:
+			if difficulty == "normal":
+				normal_2()
+			elif difficulty == "savage":
+				savage_2()
 
-func normal():
+func normal_1():
 	await delay(1.0)
 	await attack("lefty", 2.0)
 	await delay(3.0)
@@ -97,7 +105,7 @@ func normal():
 		await attack("outer_ring", 2.0)
 		await delay(2.0)
 
-func savage():
+func savage_1():
 	var last_h
 	var last_v
 	
@@ -215,10 +223,17 @@ func savage():
 	inner_outer(10,0.81)
 	await delay(10)
 	start_cast_timer("Final Finisher (Enrage)", 6.0)
-	await delay(3.0)
+	await delay(6.0)
 	while not game_over:
 		random_side(0.3)
 		await delay(0.1)
+
+func normal_2():
+	grid_helper.get_corner("top_right").transition("PlatformBlue", 3)
+	pass
+	
+func savage_2():
+	pass
 
 func attack(name: String, cast_time: float, fakeout := false):
 	if game_over:

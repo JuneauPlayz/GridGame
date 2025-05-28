@@ -3,7 +3,7 @@ extends Control
 @onready var minutes_label: Label = $Panel/HBoxContainer/Minutes
 @onready var seconds_label: Label = $Panel/HBoxContainer/Seconds
 
-@onready var fight_manager: Node = $"../FightManager"
+@onready var fight_manager: Node = %FightManager
 
 var time: float = 0.0
 var minutes: int = 0

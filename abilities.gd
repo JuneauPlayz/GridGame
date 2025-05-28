@@ -5,7 +5,7 @@ extends Control
 @onready var ability_3_bar: ProgressBar = $HBoxContainer/Ability3/ProgressBar3
 @onready var ability_4_bar: ProgressBar = $HBoxContainer/Ability4/ProgressBar4
 
-@onready var player: Node2D = $"../Player"
+@onready var player: Node2D = %Player
 
 @onready var timer1: Timer = $HBoxContainer/Ability1/Timer
 @onready var timer2: Timer = $HBoxContainer/Ability2/Timer2

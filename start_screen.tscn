@@ -44,6 +44,14 @@ offset_bottom = 457.0
 theme_override_font_sizes/font_size = 51
 text = "Normal"
 
+[node name="Normal2" type="Button" parent="."]
+offset_left = 961.0
+offset_top = 349.0
+offset_right = 1238.0
+offset_bottom = 445.0
+theme_override_font_sizes/font_size = 51
+text = "Normal"
+
 [node name="Savage" type="Button" parent="."]
 offset_left = 176.0
 offset_top = 507.0
@@ -59,6 +67,14 @@ offset_top = 257.0
 offset_right = 407.0
 offset_bottom = 327.0
 text = "Fight 1"
+label_settings = SubResource("LabelSettings_ncxyx")
+
+[node name="Fight2" type="Label" parent="."]
+offset_left = 977.0
+offset_top = 248.0
+offset_right = 1160.0
+offset_bottom = 318.0
+text = "Fight 2"
 label_settings = SubResource("LabelSettings_ncxyx")
 
 [node name="Label" type="Label" parent="."]
@@ -100,11 +116,12 @@ label_settings = SubResource("LabelSettings_k1na2")
 
 [node name="Label4" type="Label" parent="."]
 offset_left = 522.0
-offset_top = 518.0
+offset_top = 516.0
 offset_right = 1175.0
-offset_bottom = 605.0
+offset_bottom = 603.0
 text = "lock in "
 label_settings = SubResource("LabelSettings_k1na2")
 
 [connection signal="pressed" from="Normal" to="." method="_on_normal_pressed"]
+[connection signal="pressed" from="Normal2" to="." method="_on_normal_2_pressed"]
 [connection signal="pressed" from="Savage" to="." method="_on_savage_pressed"]

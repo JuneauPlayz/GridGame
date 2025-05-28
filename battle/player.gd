@@ -75,12 +75,12 @@ func _attempt_move(direction: Vector2i):
 		var target_platform = grid[target_y][target_x]
 
 		if is_dashing:
-			if target_platform.get_state() is not PlatformBlack:
+			if target_platform.get_state() is not PlatformBlack and target_platform.get_state() is not PlatformBlue:
 				last_valid_x = target_x
 				last_valid_y = target_y
 			# continue regardless of wall to see if farther tiles are reachable
 		else:
-			if target_platform.get_state() is PlatformBlack:
+			if target_platform.get_state() is PlatformBlack or target_platform.get_state() is PlatformBlue:
 				break
 			last_valid_x = target_x
 			last_valid_y = target_y

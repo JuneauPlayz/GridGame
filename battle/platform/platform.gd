@@ -3,6 +3,8 @@ extends Node2D
 @onready var color_rect: ColorRect = $ColorRect
 @onready var state_machine: Node = $"State Machine"
 
+var grid_x
+var grid_y
 
 var orange = Color("#bf5a1b75")
 var white = Color("#616161")
@@ -10,7 +12,11 @@ var white = Color("#616161")
 var is_enemy = false
 
 var flash_tween
+var fight
 
+
+func _ready():
+	fight = get_tree().get_first_node_in_group("fight")
 func set_size(width, length):
 	color_rect.custom_minimum_size = Vector2(width, length)
 	color_rect.size = Vector2(width, length)
@@ -54,3 +60,21 @@ func get_state():
 func set_enemy(x):
 	is_enemy = x
 	self.visible = false
+	
+func get_player_side() -> String:
+	var player_x = fight.player.player_x
+	var player_y = fight.player.player_y
+	var dx = player_x - grid_x
+	var dy = player_y - grid_y
+
+	match [dx, dy]:
+		[0, -1]: return "top"
+		[1, -1]: return "top_right"
+		[-1, -1]: return "top_left"
+		[-1, 0]: return "left"
+		[1, 0]: return "right"
+		[0, 1]: return "bottom"
+		[-1, 1]: return "bottom_left"
+		[1, 1]: return "bottom_right"
+		[0, 0]: return "same"
+		_: return "unknown"

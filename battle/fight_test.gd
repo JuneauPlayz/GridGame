@@ -4,14 +4,17 @@ extends Node2D
 const PLATFORM = preload("res://battle/platform/platform.tscn")
 @onready var grid_helper: Node = $Grid/GridHelper
 @onready var player: Node2D = $Player
-@onready var health_text: Label = $Camera2D/CanvasLayer/HealthText
 @onready var enemy: Node2D = $Enemy
-@onready var abilities: Control = $Abilities
-@onready var enemy_hp_bar: ProgressBar = $EnemyHPBar
-@onready var enemy_hp_label: Label = $EnemyHPLabel
-@onready var result_screen: Node2D = $ResultScreen
-@onready var clock: Control = $Clock
 @onready var fight_manager: Node = $FightManager
+@onready var countdown: Control = %Countdown
+@onready var clock: Control = %Clock
+@onready var abilities: Control = %Abilities
+@onready var result_screen: Node2D = %ResultScreen
+@onready var cast_timers: VBoxContainer = %CastTimers
+@onready var enemy_hp_bar: ProgressBar = %EnemyHPBar
+@onready var enemy_hp_label: Label = %EnemyHPLabel
+@onready var health_text: Label = %HealthText
+@onready var canvas_layer: CanvasLayer = $CanvasLayer
 
 var grid_arr = []
 var game
@@ -22,11 +25,11 @@ var player_size = 25
 var current_player_side = ""
 var game_over = false
 var difficulty
+var fight_num = 0
 
 func _ready():
 	player.can_move = false
 	game = get_tree().get_first_node_in_group("game")
-	setup_grid(rows, cols, platform_size)
 	await get_tree().process_frame
 	player.grid = grid_arr
 	player.platform_size = platform_size
@@ -38,17 +41,34 @@ func _ready():
 	randomize()
 	player.silenced = true
 	await get_tree().create_timer(3.0).timeout
-	fight_manager.start_fight(difficulty)
+	fight_manager.start_fight(fight_num, difficulty)
 	player.can_move = true
 	player.silenced = false
 
 func _process(delta):
 	if Input.is_action_just_pressed('restart'):
 		result_screen._on_restart_pressed()
-	
-func set_difficulty(difficulty):
+	elif Input.is_action_just_pressed('main_menu'):
+		game.new_scene(game.START_SCREEN)
+
+func set_fight(num, difficulty):
 	self.difficulty = difficulty
 	fight_manager.difficulty = difficulty
+	game.difficulty = difficulty
+	fight_num = num
+	fight_manager.fight_num = num
+	game.fight_num = num
+	match num:
+		1:
+			rows = 6
+			cols = 6
+			platform_size = 75
+			setup_grid(rows, cols, platform_size)
+		2:
+			rows = 7
+			cols = 7
+			platform_size = 60
+			setup_grid(rows, cols, platform_size)
 
 func setup_grid(rows, cols, size):
 	grid.columns = cols
@@ -62,6 +82,8 @@ func setup_grid(rows, cols, size):
 		for j in range(cols):
 			var new_platform = PLATFORM.instantiate()
 			new_platform.call_deferred("set_size", size, size)
+			new_platform.grid_x = j
+			new_platform.grid_y = i
 			var padded = MarginContainer.new()
 			padded.add_child(new_platform)
 			padded.set("theme_override_constants/margin_top", size / 4)
@@ -78,23 +100,25 @@ func move_player(x, y):
 	player.current_platform = grid_arr[y][x]
 
 func set_enemy():
-	var platform_center_offset = Vector2(platform_size / 2, platform_size / 2)
-	var a = grid_arr[2][2].get_pos() + platform_center_offset
-	var b = grid_arr[2][3].get_pos() + platform_center_offset
-	var c = grid_arr[3][2].get_pos() + platform_center_offset
-	var d = grid_arr[3][3].get_pos() + platform_center_offset
-	enemy.global_position = (a + b + c + d) / 4
-	if difficulty == "normal":
-		enemy.set_max_hp(350)
-	elif difficulty == "savage":
-		enemy.set_max_hp(500)
+	match fight_num:
+		1:
+			var platform_center_offset = Vector2(platform_size / 2, platform_size / 2)
+			var a = grid_arr[2][2].get_pos() + platform_center_offset
+			var b = grid_arr[2][3].get_pos() + platform_center_offset
+			var c = grid_arr[3][2].get_pos() + platform_center_offset
+			var d = grid_arr[3][3].get_pos() + platform_center_offset
+			enemy.global_position = (a + b + c + d) / 4
+			if difficulty == "normal":
+				enemy.set_max_hp(350)
+			elif difficulty == "savage":
+				enemy.set_max_hp(500)
+
+			for platform in grid_helper.get_mid_block():
+				platform.transition("PlatformBlack", -1)
+				platform.set_enemy(true)
 	enemy_hp_bar.max_value = enemy.health
 	enemy_hp_bar.value = enemy.health
 	enemy_hp_label.text = "Enemy HP: " + str(enemy.health) + "/" + str(enemy.max_health)
-	for platform in grid_helper.get_mid_block():
-		platform.transition("PlatformBlack", -1)
-		platform.set_enemy(true)
-
 
 func _on_player_health_changed() -> void:
 	AudioPlayer.play_FX("hit")
@@ -107,6 +131,8 @@ func _on_player_moved() -> void:
 	set_player_side()
 
 func set_player_side():
+	if not player:
+		return
 	var x = player.player_x
 	var y = player.player_y
 
@@ -189,3 +215,50 @@ func _on_abilities_ability_4_used() -> void:
 		return
 	player.ability_4()
 	AudioPlayer.play_FX("invuln")
+
+func knock_back_player(side: String, platforms: int) -> void:
+	var dir_map = {
+		"top": Vector2i(0, -1),
+		"top_right": Vector2i(1, -1),
+		"right": Vector2i(1, 0),
+		"bottom_right": Vector2i(1, 1),
+		"bottom": Vector2i(0, 1),
+		"bottom_left": Vector2i(-1, 1),
+		"left": Vector2i(-1, 0),
+		"top_left": Vector2i(-1, -1)
+	}
+
+	if not dir_map.has(side):
+		return  # Invalid direction
+
+	var direction = dir_map[side]
+
+	var new_x = player.player_x
+	var new_y = player.player_y
+
+	for step in range(1, platforms + 1):
+		var test_x = player.player_x + direction.x * step
+		var test_y = player.player_y + direction.y * step
+
+		# Bounds check
+		if test_y < 0 or test_y >= player.grid.size():
+			break
+		if test_x < 0 or test_x >= player.grid[0].size():
+			break
+
+		var tile = player.grid[test_y][test_x]
+		var state = tile.get_state()
+
+		# If the destination is a wall or blocked, stop BEFORE moving onto it
+		if state is PlatformBlack or state is PlatformBlue:
+			break
+
+		# Otherwise, update target position
+		new_x = test_x
+		new_y = test_y
+
+	# Move the player if they actually changed position
+	if new_x != player.player_x or new_y != player.player_y:
+		player.player_x = new_x
+		player.player_y = new_y
+		player.move_player(new_x, new_y)

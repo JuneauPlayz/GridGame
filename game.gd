@@ -2,6 +2,7 @@ extends Node2D
 
 var current_scene = null
 var difficulty = ""
+var fight_num = 0
 
 const FIGHT_TEST = preload("res://battle/fight_test.tscn")
 const START_SCREEN = preload("res://start_screen.tscn")

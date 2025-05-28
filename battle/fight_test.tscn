@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://sfxgelxxb330"]
+[gd_scene load_steps=13 format=3 uid="uid://sfxgelxxb330"]
 
 [ext_resource type="Script" uid="uid://pohkt4s83bcx" path="res://battle/fight_test.gd" id="1_dem6r"]
 [ext_resource type="PackedScene" uid="uid://dn363pv1csx7h" path="res://battle/player.tscn" id="2_bri15"]
@@ -10,16 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://do65o1ap75xmu" path="res://result_screen.tscn" id="7_3xm3i"]
 [ext_resource type="PackedScene" uid="uid://b11r4goiku2b5" path="res://countdown.tscn" id="9_51cqs"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_bri15"]
-font_size = 46
-outline_size = 10
-outline_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_af8yq"]
-font_size = 54
-outline_size = 12
-outline_color = Color(0, 0, 0, 1)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oej44"]
 bg_color = Color(0.722833, 0.194868, 0.348564, 1)
 
@@ -28,13 +18,20 @@ font_size = 26
 outline_size = 8
 outline_color = Color(0, 0, 0, 1)
 
-[node name="FightScene" type="Node2D"]
+[sub_resource type="LabelSettings" id="LabelSettings_bri15"]
+font_size = 46
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[node name="FightScene" type="Node2D" groups=["fight"]]
 script = ExtResource("1_dem6r")
 
 [node name="FightManager" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("2_pbfxh")
 
 [node name="Player" parent="." instance=ExtResource("2_bri15")]
+unique_name_in_owner = true
 
 [node name="Grid" type="GridContainer" parent="."]
 anchors_preset = 8
@@ -54,15 +51,8 @@ size_flags_vertical = 4
 [node name="GridHelper" type="Node" parent="Grid"]
 script = ExtResource("3_bri15")
 
-[node name="CastTimers" type="VBoxContainer" parent="."]
-offset_left = 730.0
-offset_top = 42.0
-offset_right = 730.0
-offset_bottom = 42.0
-theme_override_constants/separation = 75
-
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(952, 541)
+position = Vector2(960, 540)
 ignore_rotation = false
 
 [node name="Background" type="ColorRect" parent="Camera2D"]
@@ -75,40 +65,53 @@ color = Color(0.691357, 0.691357, 0.691357, 1)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
-[node name="HealthText" type="Label" parent="Camera2D/CanvasLayer"]
-offset_left = 1630.0
-offset_top = 39.0
-offset_right = 1828.0
-offset_bottom = 103.0
-text = "Health: 3"
-label_settings = SubResource("LabelSettings_bri15")
-
-[node name="Mechanics" type="Node2D" parent="."]
-
-[node name="DDR" type="Label" parent="Mechanics"]
-offset_left = 96.0
-offset_top = 237.0
-offset_right = 217.0
-offset_bottom = 311.0
-label_settings = SubResource("LabelSettings_af8yq")
-
 [node name="Enemy" parent="." instance=ExtResource("4_af8yq")]
 position = Vector2(-180, -77)
 
-[node name="Abilities" parent="." instance=ExtResource("5_mjcj8")]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Countdown" parent="CanvasLayer" instance=ExtResource("9_51cqs")]
+unique_name_in_owner = true
+offset_left = 945.0
+offset_top = 4.0
+offset_right = 945.0
+offset_bottom = 4.0
+
+[node name="Clock" parent="CanvasLayer" instance=ExtResource("6_oej44")]
+unique_name_in_owner = true
+offset_left = 7.0
+offset_right = 7.0
+
+[node name="Abilities" parent="CanvasLayer" instance=ExtResource("5_mjcj8")]
+unique_name_in_owner = true
 offset_left = 697.0
 offset_top = 928.0
 offset_right = 697.0
 offset_bottom = 928.0
 
-[node name="EnemyHPBar" type="ProgressBar" parent="."]
+[node name="ResultScreen" parent="CanvasLayer" instance=ExtResource("7_3xm3i")]
+unique_name_in_owner = true
+visible = false
+position = Vector2(712, 444)
+
+[node name="CastTimers" type="VBoxContainer" parent="CanvasLayer"]
+unique_name_in_owner = true
+offset_left = 730.0
+offset_top = 42.0
+offset_right = 730.0
+offset_bottom = 42.0
+theme_override_constants/separation = 75
+
+[node name="EnemyHPBar" type="ProgressBar" parent="CanvasLayer"]
+unique_name_in_owner = true
 offset_left = 677.0
 offset_top = 17.0
 offset_right = 1307.0
 offset_bottom = 44.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_oej44")
 
-[node name="EnemyHPLabel" type="Label" parent="."]
+[node name="EnemyHPLabel" type="Label" parent="CanvasLayer"]
+unique_name_in_owner = true
 offset_left = 430.0
 offset_top = 11.0
 offset_right = 663.0
@@ -116,26 +119,21 @@ offset_bottom = 47.0
 text = "Enemy HP 100/100"
 label_settings = SubResource("LabelSettings_oej44")
 
-[node name="Clock" parent="." instance=ExtResource("6_oej44")]
-offset_left = 7.0
-offset_right = 7.0
-
-[node name="ResultScreen" parent="." instance=ExtResource("7_3xm3i")]
-visible = false
-position = Vector2(712, 444)
-
-[node name="Countdown" parent="." instance=ExtResource("9_51cqs")]
-offset_left = 945.0
-offset_top = 4.0
-offset_right = 945.0
-offset_bottom = 4.0
+[node name="HealthText" type="Label" parent="CanvasLayer"]
+unique_name_in_owner = true
+offset_left = 1630.0
+offset_top = 39.0
+offset_right = 1828.0
+offset_bottom = 103.0
+text = "Health: 3"
+label_settings = SubResource("LabelSettings_bri15")
 
 [connection signal="dead" from="Player" to="." method="_on_player_dead"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
 [connection signal="moved" from="Player" to="." method="_on_player_moved"]
 [connection signal="damage_taken" from="Enemy" to="." method="_on_enemy_damage_taken"]
 [connection signal="dead" from="Enemy" to="." method="_on_enemy_dead"]
-[connection signal="ability_1_used" from="Abilities" to="." method="_on_abilities_ability_1_used"]
-[connection signal="ability_2_used" from="Abilities" to="." method="_on_abilities_ability_2_used"]
-[connection signal="ability_3_used" from="Abilities" to="." method="_on_abilities_ability_3_used"]
-[connection signal="ability_4_used" from="Abilities" to="." method="_on_abilities_ability_4_used"]
+[connection signal="ability_1_used" from="CanvasLayer/Abilities" to="." method="_on_abilities_ability_1_used"]
+[connection signal="ability_2_used" from="CanvasLayer/Abilities" to="." method="_on_abilities_ability_2_used"]
+[connection signal="ability_3_used" from="CanvasLayer/Abilities" to="." method="_on_abilities_ability_3_used"]
+[connection signal="ability_4_used" from="CanvasLayer/Abilities" to="." method="_on_abilities_ability_4_used"]

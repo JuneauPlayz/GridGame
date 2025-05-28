@@ -159,4 +159,18 @@ func get_sides(x, y) -> Array:
 
 	return result
 
-	
+func get_corner(corner: String):
+	if not grid_arr or grid_arr.size() == 0:
+		return null
+
+	match corner:
+		"top_left":
+			return grid_arr[0][0]
+		"top_right":
+			return grid_arr[0][grid_arr[0].size() - 1]
+		"bottom_left":
+			return grid_arr[grid_arr.size() - 1][0]
+		"bottom_right":
+			return grid_arr[grid_arr.size() - 1][grid_arr[0].size() - 1]
+		_:
+			return null
