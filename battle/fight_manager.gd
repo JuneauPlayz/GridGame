@@ -168,7 +168,7 @@ func savage():
 	await delay(1.0)
 	random_combo(2.5)
 	await delay(1.0)
-	attack("inner_ring", 1.5)
+	attack("inner_ring", 2.0)
 	await delay(2.0)
 	attack("outer_ring", 1.6)
 	await delay(3.0)
