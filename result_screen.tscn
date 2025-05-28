@@ -59,6 +59,11 @@ layout_mode = 2
 text = "Health Left:"
 label_settings = SubResource("LabelSettings_oiqpt")
 
+[node name="Difficulty" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Difficulty: "
+label_settings = SubResource("LabelSettings_oiqpt")
+
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 55

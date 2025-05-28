@@ -99,11 +99,11 @@ text = "Mechanic: Boss has fiora weakpoints on em"
 label_settings = SubResource("LabelSettings_k1na2")
 
 [node name="Label4" type="Label" parent="."]
-offset_left = 487.0
-offset_top = 523.0
-offset_right = 1140.0
-offset_bottom = 610.0
-text = "savage not implemented yet"
+offset_left = 522.0
+offset_top = 518.0
+offset_right = 1175.0
+offset_bottom = 605.0
+text = "lock in "
 label_settings = SubResource("LabelSettings_k1na2")
 
 [connection signal="pressed" from="Normal" to="." method="_on_normal_pressed"]

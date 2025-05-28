@@ -378,7 +378,7 @@ func random_double(cast_time):
 func turning_point():
 	var rotations = [90, 180, 270]
 	var choice = rotations.pick_random()
-	rotate_enemy(choice)
+	rotate_enemy(current_enemy_rotation + choice)
 	
 func rotate_enemy(deg):
 	enemy.rotation = deg_to_rad(deg)

@@ -5,6 +5,7 @@ var game
 @onready var result_label: Label = $PanelContainer/MarginContainer/VBoxContainer/Result
 @onready var time_label: Label = $PanelContainer/MarginContainer/VBoxContainer/Time
 @onready var health_left: Label = $PanelContainer/MarginContainer/VBoxContainer/HealthLeft
+@onready var difficulty: Label = $PanelContainer/MarginContainer/VBoxContainer/Difficulty
 
 func _ready():
 	game = get_tree().get_first_node_in_group("game")
@@ -24,8 +25,10 @@ func set_result(result, time, health):
 			result_label.text = "Victory!"
 			health_left.visible = true
 			health_left.text = "Health Left: " + str(health)
+			difficulty.text = "Difficulty: " + game.difficulty
 		"defeat":
 			result_label.text = "Defeated.."
 			health_left.visible = false
+			difficulty.text = "Difficulty: " + game.difficulty
 	time_label.text = "Time: " + time 
 			
