@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://k7nopku02u0i"]
+
+[ext_resource type="Script" uid="uid://cajp05xjnrdqu" path="res://cannonball.gd" id="1_jmdrc"]
+
+[node name="Cannonball" type="Node2D"]
+script = ExtResource("1_jmdrc")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(35, 35)
+offset_left = -1.0
+offset_right = 24.0
+offset_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.0930441, 0.0910493, 0.099708, 1)

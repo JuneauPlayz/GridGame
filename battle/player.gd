@@ -12,8 +12,8 @@ var tween
 @onready var ability_2_vis: Node2D = $Ability2
 
 var current_platform
-var player_x = 0
-var player_y = 0
+var x = 0
+var y = 0
 var is_moving = false
 var is_invuln = false
 var health = 3
@@ -59,15 +59,15 @@ func _attempt_move(direction: Vector2i):
 		max_steps = move_distance
 	
 	
-	var new_x = player_x
-	var new_y = player_y
+	var new_x = x
+	var new_y = y
 
-	var last_valid_x = player_x
-	var last_valid_y = player_y
+	var last_valid_x = x
+	var last_valid_y = y
 
 	for step in range(1, max_steps + 1):
-		var target_x = player_x + direction.x * step
-		var target_y = player_y + direction.y * step
+		var target_x = x + direction.x * step
+		var target_y = y + direction.y * step
 
 		if target_y < 0 or target_y >= grid.size() or target_x < 0 or target_x >= grid[0].size():
 			break
@@ -86,10 +86,10 @@ func _attempt_move(direction: Vector2i):
 			last_valid_y = target_y
 
 
-	if last_valid_x != player_x or last_valid_y != player_y:
-		player_x = last_valid_x
-		player_y = last_valid_y
-		move_player(player_x, player_y)
+	if last_valid_x != x or last_valid_y != y:
+		x = last_valid_x
+		y = last_valid_y
+		move_player(x, y)
 
 
 
@@ -102,7 +102,8 @@ func move_player(x, y):
 
 	# Wait for halfway
 	current_platform = grid[y][x]
-
+	self.x = x
+	self.y = y
 	await tween.finished
 	is_moving = false
 
@@ -148,3 +149,50 @@ func effect(text, length):
 	effect_label.visible = true
 	await get_tree().create_timer(length).timeout
 	effect_label.visible = false
+
+func knock_back(side: String, platforms: int) -> void:
+	var dir_map = {
+		"top": Vector2i(0, -1),
+		"top_right": Vector2i(1, -1),
+		"right": Vector2i(1, 0),
+		"bottom_right": Vector2i(1, 1),
+		"bottom": Vector2i(0, 1),
+		"bottom_left": Vector2i(-1, 1),
+		"left": Vector2i(-1, 0),
+		"top_left": Vector2i(-1, -1)
+	}
+
+	if not dir_map.has(side):
+		return  # Invalid direction
+
+	var direction = dir_map[side]
+
+	var new_x = x
+	var new_y = y
+
+	for step in range(1, platforms + 1):
+		var test_x = x + direction.x * step
+		var test_y = y + direction.y * step
+
+		# Bounds check
+		if test_y < 0 or test_y >= grid.size():
+			break
+		if test_x < 0 or test_x >= grid[0].size():
+			break
+
+		var tile = grid[test_y][test_x]
+		var state = tile.get_state()
+
+		# Stop if last platform is blocked
+		if step == platforms and (state is PlatformBlack or state is PlatformBlue):
+			break
+
+		# Otherwise allow passthrough
+		new_x = test_x
+		new_y = test_y
+
+	# Move if valid
+	if new_x != x or new_y != y:
+		x = new_x
+		y = new_y
+		move_player(new_x, new_y)

@@ -4,7 +4,9 @@ extends Node
 @onready var player: Node2D = %Player
 @onready var enemy: Node2D = $"../Enemy"
 @onready var cast_timers: VBoxContainer = %CastTimers
+@onready var object_manager: Node = $"../ObjectManager"
 
+const CANNONBALL = preload("res://cannonball.tscn")
 const CAST_TIMER = preload("res://cast_timer.tscn")
 
 var current_enemy_rotation = 0
@@ -72,7 +74,7 @@ func normal_1():
 	start_cast_timer("Barrage", 2.0)
 	for i in 8:
 		random_side(2.0)
-		await delay(1.0)
+		await delay(2.0)
 
 	start_cast_timer("Turning Point", 2.0)
 	await delay(2.0)
@@ -229,7 +231,19 @@ func savage_1():
 		await delay(0.1)
 
 func normal_2():
-	grid_helper.get_corner("top_right").transition("PlatformBlue", 3)
+	#var starting_blue = grid_helper.get_offset(grid_helper.get_corner("top_right"), -1, 1)
+	#starting_blue.transition("PlatformBlue", 3)
+	#await delay(0.2)
+	#var next_blue = grid_helper.get_offset(starting_blue, 1, 4)
+	#next_blue.transition("PlatformBlue", 3)
+	#await delay(0.2)
+	#next_blue = grid_helper.get_offset(next_blue, -4, 1)
+	#next_blue.transition("PlatformBlue", 3)
+	drop_cannonball(5, 5, 3.0)
+	await delay(3.0)
+	create_blue(3.0)
+	await delay(1.5)
+
 	pass
 	
 func savage_2():
@@ -400,6 +414,35 @@ func rotate_enemy(deg):
 	current_enemy_rotation = deg
 	fight.set_player_side()
 
+func create_blue(cast_timer):
+	start_cast_timer("Create: Blue", cast_timer)
+	await delay(cast_timer)
+	player.current_platform.transition("PlatformBlue", 6)
+	
+func root_player(mode):
+	player.can_move = mode
+
+func spawn_cannonball(x,y):
+	var new_object = CANNONBALL.instantiate()
+	object_manager.add_child(new_object)
+	new_object.grid = fight.grid_arr
+	new_object.platform_size = fight.platform_size
+
+	new_object.move_to(x,y)
+
+func drop_cannonball(x,y,cast_timer):
+	start_cast_timer("Drop Cannonball", 2.5)
+	await delay(2.5)
+	spawn_cannonball(x,y)
+
+func the_world(cast_timer, length):
+	start_cast_timer("time stop", cast_timer)
+	await delay(cast_timer)
+	player.can_move = false
+	player.effect("rooted!", length)
+	await delay(length)
+	player.can_move = true
+	
 func start_cast_timer(name, length):
 	if game_over:
 		return

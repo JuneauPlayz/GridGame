@@ -47,6 +47,7 @@ script = ExtResource("7_b1y36")
 metadata/_custom_type_script = "uid://bnaw35ldk0ej6"
 
 [node name="Timer" type="Timer" parent="State Machine/PlatformBlue"]
+one_shot = true
 
 [connection signal="timeout" from="State Machine/PlatformOrange/FlashTimer" to="State Machine/PlatformOrange" method="_on_flash_timer_timeout"]
 [connection signal="timeout" from="State Machine/PlatformRed/Timer" to="State Machine/PlatformRed" method="_on_timer_timeout"]

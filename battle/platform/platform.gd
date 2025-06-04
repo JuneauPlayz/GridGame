@@ -61,11 +61,9 @@ func set_enemy(x):
 	is_enemy = x
 	self.visible = false
 	
-func get_player_side() -> String:
-	var player_x = fight.player.player_x
-	var player_y = fight.player.player_y
-	var dx = player_x - grid_x
-	var dy = player_y - grid_y
+func get_side(x, y) -> String:
+	var dx = x - grid_x
+	var dy = y - grid_y
 
 	match [dx, dy]:
 		[0, -1]: return "top"
@@ -78,3 +76,6 @@ func get_player_side() -> String:
 		[1, 1]: return "bottom_right"
 		[0, 0]: return "same"
 		_: return "unknown"
+
+func get_player_side():
+	return get_side(fight.player.x, fight.player.y)

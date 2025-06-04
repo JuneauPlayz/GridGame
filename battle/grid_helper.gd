@@ -1,6 +1,7 @@
 extends Node
 
 var grid_arr = []
+var player
 
 func setup_grid(arr):
 	grid_arr = arr
@@ -174,3 +175,9 @@ func get_corner(corner: String):
 			return grid_arr[grid_arr.size() - 1][grid_arr[0].size() - 1]
 		_:
 			return null
+
+func get_grid():
+	return grid_arr
+
+func get_offset(platform, x, y):
+	return grid_arr[platform.grid_y+y][platform.grid_x+x]

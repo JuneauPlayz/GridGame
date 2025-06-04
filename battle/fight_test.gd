@@ -15,6 +15,7 @@ const PLATFORM = preload("res://battle/platform/platform.tscn")
 @onready var enemy_hp_label: Label = %EnemyHPLabel
 @onready var health_text: Label = %HealthText
 @onready var canvas_layer: CanvasLayer = $CanvasLayer
+@onready var object_manager: Node = $ObjectManager
 
 var grid_arr = []
 var game
@@ -65,10 +66,11 @@ func set_fight(num, difficulty):
 			platform_size = 75
 			setup_grid(rows, cols, platform_size)
 		2:
-			rows = 7
-			cols = 7
+			rows = 9
+			cols = 9
 			platform_size = 60
 			setup_grid(rows, cols, platform_size)
+			
 
 func setup_grid(rows, cols, size):
 	grid.columns = cols
@@ -92,6 +94,7 @@ func setup_grid(rows, cols, size):
 			padded.set("theme_override_constants/margin_right", size / 4)
 			grid.add_child(padded)
 			row_arr.append(new_platform)
+			new_platform.fight = self
 		grid_arr.append(row_arr)
 	grid_helper.grid_arr = grid_arr
 
@@ -116,6 +119,17 @@ func set_enemy():
 			for platform in grid_helper.get_mid_block():
 				platform.transition("PlatformBlack", -1)
 				platform.set_enemy(true)
+		2:
+			for platform in grid_helper.get_row(2):
+				platform.transition("PlatformBlack", -1)
+				platform.visible = false
+			for platform in grid_helper.get_row(3):
+				platform.transition("PlatformBlack", -1)
+				platform.visible = false
+				
+			for platform in grid_helper.get_row(8):
+				platform.transition("PlatformBlack", -1)
+				platform.visible = false
 	enemy_hp_bar.max_value = enemy.health
 	enemy_hp_bar.value = enemy.health
 	enemy_hp_label.text = "Enemy HP: " + str(enemy.health) + "/" + str(enemy.max_health)
@@ -133,8 +147,8 @@ func _on_player_moved() -> void:
 func set_player_side():
 	if not player:
 		return
-	var x = player.player_x
-	var y = player.player_y
+	var x = player.x
+	var y = player.y
 
 	var local_side := "none"
 	if x in [0, 1] and y in [2, 3]:
@@ -181,7 +195,7 @@ func _on_abilities_ability_1_used() -> void:
 	if game_over or player.silenced:
 		return
 	var enemy_hit = false
-	for platform in grid_helper.get_sides(player.player_x, player.player_y):
+	for platform in grid_helper.get_sides(player.x, player.y):
 		if platform.is_enemy:
 			enemy_hit = true
 	if enemy_hit:
@@ -194,7 +208,7 @@ func _on_abilities_ability_2_used() -> void:
 	if game_over or player.silenced:
 		return
 	var enemy_hit = false
-	for platform in grid_helper.get_cross(player.player_x, player.player_y):
+	for platform in grid_helper.get_cross(player.x, player.y):
 		if platform.is_enemy:
 			enemy_hit = true
 	if enemy_hit:
@@ -215,50 +229,3 @@ func _on_abilities_ability_4_used() -> void:
 		return
 	player.ability_4()
 	AudioPlayer.play_FX("invuln")
-
-func knock_back_player(side: String, platforms: int) -> void:
-	var dir_map = {
-		"top": Vector2i(0, -1),
-		"top_right": Vector2i(1, -1),
-		"right": Vector2i(1, 0),
-		"bottom_right": Vector2i(1, 1),
-		"bottom": Vector2i(0, 1),
-		"bottom_left": Vector2i(-1, 1),
-		"left": Vector2i(-1, 0),
-		"top_left": Vector2i(-1, -1)
-	}
-
-	if not dir_map.has(side):
-		return  # Invalid direction
-
-	var direction = dir_map[side]
-
-	var new_x = player.player_x
-	var new_y = player.player_y
-
-	for step in range(1, platforms + 1):
-		var test_x = player.player_x + direction.x * step
-		var test_y = player.player_y + direction.y * step
-
-		# Bounds check
-		if test_y < 0 or test_y >= player.grid.size():
-			break
-		if test_x < 0 or test_x >= player.grid[0].size():
-			break
-
-		var tile = player.grid[test_y][test_x]
-		var state = tile.get_state()
-
-		# If the destination is a wall or blocked, stop BEFORE moving onto it
-		if state is PlatformBlack or state is PlatformBlue:
-			break
-
-		# Otherwise, update target position
-		new_x = test_x
-		new_y = test_y
-
-	# Move the player if they actually changed position
-	if new_x != player.player_x or new_y != player.player_y:
-		player.player_x = new_x
-		player.player_y = new_y
-		player.move_player(new_x, new_y)
