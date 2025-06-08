@@ -150,7 +150,7 @@ func effect(text, length):
 	await get_tree().create_timer(length).timeout
 	effect_label.visible = false
 
-func knock_back(side: String, platforms: int) -> void:
+func knock_back(side: String, distance: int) -> void:
 	var dir_map = {
 		"top": Vector2i(0, -1),
 		"top_right": Vector2i(1, -1),
@@ -163,16 +163,15 @@ func knock_back(side: String, platforms: int) -> void:
 	}
 
 	if not dir_map.has(side):
-		return  # Invalid direction
+		return
 
 	var direction = dir_map[side]
+	var target_x = self.x
+	var target_y = self.y
 
-	var new_x = x
-	var new_y = y
-
-	for step in range(1, platforms + 1):
-		var test_x = x + direction.x * step
-		var test_y = y + direction.y * step
+	for step in range(1, distance + 1):
+		var test_x = self.x + direction.x * step
+		var test_y = self.y + direction.y * step
 
 		# Bounds check
 		if test_y < 0 or test_y >= grid.size():
@@ -183,16 +182,14 @@ func knock_back(side: String, platforms: int) -> void:
 		var tile = grid[test_y][test_x]
 		var state = tile.get_state()
 
-		# Stop if last platform is blocked
-		if step == platforms and (state is PlatformBlack or state is PlatformBlue):
+		# If final tile is blocked, stop BEFORE moving onto it
+		if step == distance and (state is PlatformBlack or state is PlatformBlue):
 			break
 
-		# Otherwise allow passthrough
-		new_x = test_x
-		new_y = test_y
+		# Otherwise, we can pass through or land on it
+		if state is not PlatformBlack:
+			target_x = test_x
+			target_y = test_y
 
-	# Move if valid
-	if new_x != x or new_y != y:
-		x = new_x
-		y = new_y
-		move_player(new_x, new_y)
+	if target_x != self.x or target_y != self.y:
+		await move_player(target_x, target_y)

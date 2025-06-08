@@ -10,6 +10,10 @@ var x = 0
 var y = 0
 var is_moving = false
 
+signal weakpoint_hit
+signal ship_hit
+
+var fight
 @onready var sprite: ColorRect = $ColorRect
 var tween
 
@@ -25,9 +29,16 @@ func move_to(x, y):
 	current_platform = grid[y][x]
 	self.x = x
 	self.y = y
-
+	await get_tree().create_timer(0.135).timeout
+	if current_platform.grid_y == 0:
+		ship_hit.emit()
+		if current_platform.ball_weakpoint == true:
+			weakpoint_hit.emit()
+		self.queue_free()
 	await tween.finished
 	is_moving = false
+
+	
 
 func knock_back(side: String, distance: int) -> void:
 	var dir_map = {
@@ -42,12 +53,11 @@ func knock_back(side: String, distance: int) -> void:
 	}
 
 	if not dir_map.has(side):
-		return  # Invalid direction string
+		return
 
 	var direction = dir_map[side]
-
-	var new_x = self.x
-	var new_y = self.y
+	var target_x = self.x
+	var target_y = self.y
 
 	for step in range(1, distance + 1):
 		var test_x = self.x + direction.x * step
@@ -61,13 +71,17 @@ func knock_back(side: String, distance: int) -> void:
 
 		var tile = grid[test_y][test_x]
 		var state = tile.get_state()
-
-		# Stop if final platform is a wall
-		if step == distance and (state is PlatformBlack or state is PlatformBlue):
+		
+		if tile == fight.player.current_platform:
+			break
+		# If final tile is blocked, stop BEFORE moving onto it
+		if step == distance and (((state is PlatformBlack or state is PlatformBlue) and tile.is_enemy == false) or tile == fight.player.current_platform):
 			break
 
-		new_x = test_x
-		new_y = test_y
+		# Otherwise, we can pass through or land on it
+		if state is not PlatformBlack or tile.is_enemy == true:
+			target_x = test_x
+			target_y = test_y
 
-	if new_x != self.x or new_y != self.y:
-		await move_to(new_x, new_y)
+	if target_x != self.x or target_y != self.y:
+		await move_to(target_x, target_y)

@@ -1,7 +1,10 @@
 extends Node2D
 
 @onready var grid: GridContainer = $Grid
+
 const PLATFORM = preload("res://battle/platform/platform.tscn")
+const ENEMY_2 = preload("res://enemy_2.tscn")
+
 @onready var grid_helper: Node = $Grid/GridHelper
 @onready var player: Node2D = $Player
 @onready var enemy: Node2D = $Enemy
@@ -16,6 +19,7 @@ const PLATFORM = preload("res://battle/platform/platform.tscn")
 @onready var health_text: Label = %HealthText
 @onready var canvas_layer: CanvasLayer = $CanvasLayer
 @onready var object_manager: Node = $ObjectManager
+@onready var background: ColorRect = $Camera2D/Background
 
 var grid_arr = []
 var game
@@ -32,11 +36,6 @@ func _ready():
 	player.can_move = false
 	game = get_tree().get_first_node_in_group("game")
 	await get_tree().process_frame
-	player.grid = grid_arr
-	player.platform_size = platform_size
-	player.player_size = player_size
-	move_player(0, 0)
-	player.current_platform = grid_arr[0][0]
 	result_screen.visible = false
 	set_enemy()
 	randomize()
@@ -65,12 +64,15 @@ func set_fight(num, difficulty):
 			cols = 6
 			platform_size = 75
 			setup_grid(rows, cols, platform_size)
+			player.call_deferred("move_player", 0, 0)
 		2:
 			rows = 9
 			cols = 9
 			platform_size = 60
 			setup_grid(rows, cols, platform_size)
-			
+			change_enemy(ENEMY_2)
+			player.call_deferred("move_player", 0, 4)
+			change_bg_color("#4b95a6")
 
 func setup_grid(rows, cols, size):
 	grid.columns = cols
@@ -97,10 +99,12 @@ func setup_grid(rows, cols, size):
 			new_platform.fight = self
 		grid_arr.append(row_arr)
 	grid_helper.grid_arr = grid_arr
+	player.grid = grid_arr
+	player.platform_size = platform_size
+	player.player_size = player_size
+	player.current_platform = grid_arr[0][0]
+	
 
-func move_player(x, y):
-	player.global_position = grid_arr[y][x].get_pos() + Vector2(platform_size / 2, platform_size / 2) - Vector2(player_size / 2, player_size / 2)
-	player.current_platform = grid_arr[y][x]
 
 func set_enemy():
 	match fight_num:
@@ -117,9 +121,14 @@ func set_enemy():
 				enemy.set_max_hp(500)
 
 			for platform in grid_helper.get_mid_block():
-				platform.transition("PlatformBlack", -1)
 				platform.set_enemy(true)
 		2:
+			for platform in grid_helper.get_row(0):
+				platform.set_enemy(true)
+				
+			for platform in grid_helper.get_row(1):
+				platform.set_enemy(true)
+				
 			for platform in grid_helper.get_row(2):
 				platform.transition("PlatformBlack", -1)
 				platform.visible = false
@@ -130,6 +139,8 @@ func set_enemy():
 			for platform in grid_helper.get_row(8):
 				platform.transition("PlatformBlack", -1)
 				platform.visible = false
+			enemy.global_position = grid_helper.get_corner("top_left").get_pos()
+			enemy.global_position.x = (get_viewport_rect().size.x - enemy.sprite.size.x) / 2
 	enemy_hp_bar.max_value = enemy.health
 	enemy_hp_bar.value = enemy.health
 	enemy_hp_label.text = "Enemy HP: " + str(enemy.health) + "/" + str(enemy.max_health)
@@ -176,9 +187,16 @@ func _on_enemy_damage_taken() -> void:
 	enemy_hp_bar.value = enemy.health
 	enemy_hp_label.text = "Enemy HP: " + str(enemy.health) + "/" + str(enemy.max_health)
 	if enemy.weakpoint_side == current_player_side:
-		enemy.new_weakpoint()
-		enemy.take_damage(enemy.weakpoint_damage)
-		AudioPlayer.play_FX("fiora")
+		weakpoint_hit()
+		
+func weakpoint_hit():
+	enemy.new_weakpoint()
+	enemy.take_damage(enemy.weakpoint_damage)
+	AudioPlayer.play_FX("fiora")
+
+func ship_hit():
+	enemy.take_damage(5)
+	AudioPlayer.play_FX("hit", -10)
 
 func _on_enemy_dead() -> void:
 	result("victory")
@@ -229,3 +247,15 @@ func _on_abilities_ability_4_used() -> void:
 		return
 	player.ability_4()
 	AudioPlayer.play_FX("invuln")
+
+func change_enemy(scene):
+	if enemy != null:
+		enemy.queue_free()
+	enemy = scene.instantiate()
+	self.add_child(enemy)
+	fight_manager.enemy = enemy
+	enemy.damage_taken.connect(_on_enemy_damage_taken)
+	enemy.dead.connect(_on_enemy_dead)
+
+func change_bg_color(color):
+	background.color = color

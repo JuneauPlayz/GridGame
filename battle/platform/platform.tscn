@@ -17,6 +17,15 @@ offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.381703, 0.381703, 0.381703, 1)
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+z_index = -1
+custom_minimum_size = Vector2(54, 54)
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 52.0
+offset_bottom = 52.0
+color = Color(0, 0, 0, 1)
+
 [node name="State Machine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_kqoq2")
 initial_state = NodePath("PlatformDefault")

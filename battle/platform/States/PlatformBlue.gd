@@ -40,5 +40,5 @@ func _on_timer_timeout() -> void:
 	var side = get_parent().get_parent().get_player_side()
 	fight.player.knock_back(side, 3)
 	for object in fight.object_manager.get_children():
-		object.knock_back(get_parent().get_parent().get_side(object.x, object.y), 3)
+		object.knock_back(get_parent().get_parent().get_side(object.x, object.y), 10)
 	Transitioned.emit(self, "PlatformDefault", -1)

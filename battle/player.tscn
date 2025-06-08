@@ -15,6 +15,17 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 color = Color(0.349551, 0.426503, 0.613229, 1)
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+z_index = -1
+custom_minimum_size = Vector2(27, 27)
+offset_left = -2.0
+offset_top = -1.0
+offset_right = 25.0
+offset_bottom = 26.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0, 0, 0, 1)
+
 [node name="InvulnTimer" type="Timer" parent="."]
 one_shot = true
 

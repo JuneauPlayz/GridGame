@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var color_rect: ColorRect = $ColorRect
 @onready var state_machine: Node = $"State Machine"
+@onready var color_rect_2: ColorRect = $ColorRect2
 
 var grid_x
 var grid_y
@@ -11,15 +12,19 @@ var white = Color("#616161")
 
 var is_enemy = false
 
+var ball_weakpoint = false
 var flash_tween
 var fight
 
 
 func _ready():
 	fight = get_tree().get_first_node_in_group("fight")
+	
 func set_size(width, length):
 	color_rect.custom_minimum_size = Vector2(width, length)
 	color_rect.size = Vector2(width, length)
+	color_rect_2.custom_minimum_size = Vector2(width+4, length+4)
+	color_rect_2.size = Vector2(width+4, length+4)
 
 func get_pos():
 	return color_rect.global_position
@@ -58,6 +63,7 @@ func get_state():
 	return state_machine.current_state
 
 func set_enemy(x):
+	transition("PlatformBlack", -1)
 	is_enemy = x
 	self.visible = false
 	

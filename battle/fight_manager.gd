@@ -20,21 +20,19 @@ var fight
 func start_fight(num, difficulty):
 	fight = get_parent()
 	fight_paused = false
-	AudioPlayer.play_music_level()
-	player.global_position = grid_helper.grid_arr[0][0].get_pos()
-	player.current_platform = grid_helper.grid_arr[0][0]
-	enemy.new_weakpoint()
+	#AudioPlayer.play_music_level()
 
 	await get_tree().process_frame
 	randomize()
-	player.global_position = grid_helper.grid_arr[0][0].get_pos()
 	match num:
 		1:
+			enemy.new_weakpoint()
 			if difficulty == "normal":
 				normal_1()
 			elif difficulty == "savage":
 				savage_1()
 		2:
+			enemy.new_weakpoint()
 			if difficulty == "normal":
 				normal_2()
 			elif difficulty == "savage":
@@ -239,11 +237,16 @@ func normal_2():
 	#await delay(0.2)
 	#next_blue = grid_helper.get_offset(next_blue, -4, 1)
 	#next_blue.transition("PlatformBlue", 3)
-	drop_cannonball(5, 5, 3.0)
-	await delay(3.0)
-	create_blue(3.0)
-	await delay(1.5)
-
+	
+	for i in 3:
+		fight.enemy.new_cannon_spot()
+		fire_cannonball(3.0)
+		await delay(3.0)
+		create_blue(3.0)
+		await delay(1.5)
+		create_blue(3.0)
+		await delay(8)
+	
 	pass
 	
 func savage_2():
@@ -427,13 +430,26 @@ func spawn_cannonball(x,y):
 	object_manager.add_child(new_object)
 	new_object.grid = fight.grid_arr
 	new_object.platform_size = fight.platform_size
-
 	new_object.move_to(x,y)
-
+	new_object.fight = fight
+	new_object.weakpoint_hit.connect(on_weakpoint_hit)
+	new_object.ship_hit.connect(on_ship_hit)
+	
 func drop_cannonball(x,y,cast_timer):
 	start_cast_timer("Drop Cannonball", 2.5)
 	await delay(2.5)
 	spawn_cannonball(x,y)
+
+func fire_cannonball(cast_timer):
+	start_cast_timer("Cannon Shoot", 2.5)
+	await delay(2.5)
+	var col = fight.enemy.current_cannon
+	for i in range(col-1, col+2):
+		if i < grid_helper.get_grid().size():
+			for platform in grid_helper.get_col(i):
+				platform.transition("PlatformOrange", 1)
+	await delay(1)
+	spawn_cannonball(col, randi_range(4,5))
 
 func the_world(cast_timer, length):
 	start_cast_timer("time stop", cast_timer)
@@ -442,7 +458,13 @@ func the_world(cast_timer, length):
 	player.effect("rooted!", length)
 	await delay(length)
 	player.can_move = true
-	
+
+func on_weakpoint_hit():
+	fight.weakpoint_hit()
+
+func on_ship_hit():
+	fight.ship_hit()
+
 func start_cast_timer(name, length):
 	if game_over:
 		return

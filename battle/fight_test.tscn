@@ -56,7 +56,7 @@ position = Vector2(960, 540)
 ignore_rotation = false
 
 [node name="Background" type="ColorRect" parent="Camera2D"]
-z_index = -1
+z_index = -5
 offset_left = -2127.0
 offset_top = -1650.0
 offset_right = 3396.0
