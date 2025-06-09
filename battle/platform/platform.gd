@@ -7,18 +7,60 @@ extends Node2D
 var grid_x
 var grid_y
 
-var orange = Color("#bf5a1b75")
+var orange = Color("#bf5a1b90")
 var white = Color("#616161")
 
 var is_enemy = false
+var activation = false
 
 var ball_weakpoint = false
 var flash_tween
 var fight
 
+var curr_player_dir = null
+
+var old_weakpoints = []
+var weakpoints = []
+
+signal weakpoint_effect
 
 func _ready():
 	fight = get_tree().get_first_node_in_group("fight")
+	set_process(false)
+	
+func _process(delta):
+	if not fight or not fight.player:
+		return
+
+	var directions = [
+		Vector2i(0, -1),  # Up
+		Vector2i(0, 1),   # Down
+		Vector2i(-1, 0),  # Left
+		Vector2i(1, 0)    # Right
+	]
+
+	for dir in directions:
+		var check_x = self.grid_x + dir.x
+		var check_y = self.grid_y + dir.y
+
+		# Bounds check
+		if check_y < 0 or check_y >= fight.grid_arr.size():
+			continue
+		if check_x < 0 or check_x >= fight.grid_arr[0].size():
+			continue
+
+		if check_x == fight.player.x and check_y == fight.player.y:
+			match dir:
+				Vector2i(0, -1):
+					curr_player_dir = "up"
+				Vector2i(0, 1):
+					curr_player_dir = "down"
+				Vector2i(-1, 0):
+					curr_player_dir = "left"
+				Vector2i(1, 0):
+					curr_player_dir = "right"
+			
+			# do something here
 	
 func set_size(width, length):
 	color_rect.custom_minimum_size = Vector2(width, length)
@@ -85,3 +127,13 @@ func get_side(x, y) -> String:
 
 func get_player_side():
 	return get_side(fight.player.x, fight.player.y)
+
+func set_activation(x, sides):
+	activation = x
+	set_process(x)
+	weakpoints = sides
+	old_weakpoints = sides.duplicate()
+
+func new_weakpoints():
+	weakpoints = old_weakpoints.duplicate()
+	weakpoint_effect.emit()

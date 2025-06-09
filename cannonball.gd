@@ -5,6 +5,7 @@ var grid
 var platform_size
 var cannonball_size
 
+var spawning = true
 var current_platform
 var x = 0
 var y = 0
@@ -22,21 +23,28 @@ func _ready():
 
 func move_to(x, y):
 	var target_pos = grid[y][x].get_pos() + Vector2(platform_size / 2, platform_size / 2) - Vector2(cannonball_size / 2, cannonball_size / 2)
-	tween = create_tween()
-	is_moving = true
-	tween.tween_property(self, "global_position", target_pos, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	
+	if spawning:
+		global_position = target_pos  # Instantly place cannonball
+		spawning = false
+	else:
+		tween = create_tween()
+		is_moving = true
+		tween.tween_property(self, "global_position", target_pos, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		await tween.finished
+		is_moving = false
 
 	current_platform = grid[y][x]
 	self.x = x
 	self.y = y
+
 	await get_tree().create_timer(0.135).timeout
 	if current_platform.grid_y == 0:
 		ship_hit.emit()
 		if current_platform.ball_weakpoint == true:
 			weakpoint_hit.emit()
 		self.queue_free()
-	await tween.finished
-	is_moving = false
+
 
 	
 

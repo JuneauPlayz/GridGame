@@ -135,10 +135,12 @@ func set_enemy():
 			for platform in grid_helper.get_row(3):
 				platform.transition("PlatformBlack", -1)
 				platform.visible = false
-				
 			for platform in grid_helper.get_row(8):
 				platform.transition("PlatformBlack", -1)
 				platform.visible = false
+			grid_arr[4][4].transition("PlatformBlack", -1)
+			grid_arr[4][4].set_activation(true, ["left", "down", "right"])
+			grid_arr[4][4].weakpoint_effect.connect(fight_manager.fire_mini_cannonball)
 			enemy.global_position = grid_helper.get_corner("top_left").get_pos()
 			enemy.global_position.x = (get_viewport_rect().size.x - enemy.sprite.size.x) / 2
 	enemy_hp_bar.max_value = enemy.health
@@ -212,26 +214,14 @@ func result(res):
 func _on_abilities_ability_1_used() -> void:
 	if game_over or player.silenced:
 		return
-	var enemy_hit = false
-	for platform in grid_helper.get_sides(player.x, player.y):
-		if platform.is_enemy:
-			enemy_hit = true
-	if enemy_hit:
-		enemy.take_damage(abilities.ability_1_dmg)
-		AudioPlayer.play_FX("punch", -15.0)
 	player.ability_1()
+	hit_check(grid_helper.get_sides(player.x, player.y), abilities.ability_1_dmg)
 	AudioPlayer.play_FX("click")
 
 func _on_abilities_ability_2_used() -> void:
 	if game_over or player.silenced:
 		return
-	var enemy_hit = false
-	for platform in grid_helper.get_cross(player.x, player.y):
-		if platform.is_enemy:
-			enemy_hit = true
-	if enemy_hit:
-		enemy.take_damage(abilities.ability_2_dmg)
-		AudioPlayer.play_FX("punch", -20.0)
+	hit_check(grid_helper.get_cross(player.x, player.y), abilities.ability_2_dmg)
 	player.ability_2()
 	AudioPlayer.play_FX("click")
 
@@ -247,6 +237,21 @@ func _on_abilities_ability_4_used() -> void:
 		return
 	player.ability_4()
 	AudioPlayer.play_FX("invuln")
+
+func hit_check(platforms, dmg):
+	var enemy_hit = false
+	for platform in platforms:
+		if platform.is_enemy:
+			enemy_hit = true
+		if platform.activation == true:
+			if platform.curr_player_dir in platform.weakpoints:
+				platform.weakpoints.erase(platform.curr_player_dir)
+				AudioPlayer.play_FX("fiora")
+				if platform.weakpoints.is_empty():
+					platform.new_weakpoints()
+	if enemy_hit:
+		enemy.take_damage(dmg)
+		AudioPlayer.play_FX("punch", -15.0)
 
 func change_enemy(scene):
 	if enemy != null:

@@ -4,30 +4,70 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ouwa"]
 bg_color = Color(0.905882, 0.376471, 0.501961, 0.219608)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yohyg"]
 bg_color = Color(0.330237, 0.574527, 0.440835, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_6ouwa"]
 font_size = 32
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_57sjf"]
 bg_color = Color(0.905882, 0.376471, 0.501961, 0.219608)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ggd60"]
 bg_color = Color(0.329412, 0.576471, 0.439216, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sn2kb"]
 bg_color = Color(0.905882, 0.376471, 0.501961, 0.219608)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o32qe"]
 bg_color = Color(0.329412, 0.576471, 0.439216, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mx4y5"]
 bg_color = Color(0.905882, 0.376471, 0.501961, 0.219608)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1x7y"]
 bg_color = Color(0.329412, 0.576471, 0.439216, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_yohyg"]
 font_size = 24

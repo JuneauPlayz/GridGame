@@ -425,15 +425,18 @@ func create_blue(cast_timer):
 func root_player(mode):
 	player.can_move = mode
 
-func spawn_cannonball(x,y):
+func spawn_cannonball(x,y, from_ship := false):
 	var new_object = CANNONBALL.instantiate()
 	object_manager.add_child(new_object)
 	new_object.grid = fight.grid_arr
 	new_object.platform_size = fight.platform_size
+	if from_ship:
+		new_object.move_to(fight.enemy.current_cannon, 1)
 	new_object.move_to(x,y)
 	new_object.fight = fight
 	new_object.weakpoint_hit.connect(on_weakpoint_hit)
 	new_object.ship_hit.connect(on_ship_hit)
+	return new_object
 	
 func drop_cannonball(x,y,cast_timer):
 	start_cast_timer("Drop Cannonball", 2.5)
@@ -449,8 +452,12 @@ func fire_cannonball(cast_timer):
 			for platform in grid_helper.get_col(i):
 				platform.transition("PlatformOrange", 1)
 	await delay(1)
-	spawn_cannonball(col, randi_range(4,5))
+	spawn_cannonball(col, randi_range(5,6), true)
 
+func fire_mini_cannonball():
+	var cannonball = spawn_cannonball(4,4)
+	cannonball.knock_back("top", 10)
+	
 func the_world(cast_timer, length):
 	start_cast_timer("time stop", cast_timer)
 	await delay(cast_timer)
