@@ -41,10 +41,11 @@ func new_weakpoint():
 	weakpoint.visible = true
 	var num = grid[0].size()
 	
-	var rand_num = randi_range(0,num-1)
+	var options = [0, 1, 2, 3, 5, 6, 7, 8]
+	var rand_num = options[randi() % options.size()]
 	
 	while grid[0][rand_num] == current_weakpoint:
-		rand_num = randi_range(0,num-1)
+		rand_num = options[randi() % options.size()]
 	
 	weakpoint.global_position.x = grid[0][rand_num].get_pos().x
 	grid[0][rand_num].ball_weakpoint = true

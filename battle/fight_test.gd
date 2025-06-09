@@ -245,8 +245,7 @@ func hit_check(platforms, dmg):
 			enemy_hit = true
 		if platform.activation == true:
 			if platform.curr_player_dir in platform.weakpoints:
-				platform.weakpoints.erase(platform.curr_player_dir)
-				AudioPlayer.play_FX("fiora")
+				platform.remove_weakpoint(platform.curr_player_dir)
 				if platform.weakpoints.is_empty():
 					platform.new_weakpoints()
 	if enemy_hit:

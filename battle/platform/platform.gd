@@ -3,6 +3,10 @@ extends Node2D
 @onready var color_rect: ColorRect = $ColorRect
 @onready var state_machine: Node = $"State Machine"
 @onready var color_rect_2: ColorRect = $ColorRect2
+@onready var up: Node2D = $Weakpoints/Up
+@onready var right: Node2D = $Weakpoints/Right
+@onready var down: Node2D = $Weakpoints/Down
+@onready var left: Node2D = $Weakpoints/Left
 
 var grid_x
 var grid_y
@@ -62,11 +66,11 @@ func _process(delta):
 			
 			# do something here
 	
-func set_size(width, length):
-	color_rect.custom_minimum_size = Vector2(width, length)
-	color_rect.size = Vector2(width, length)
-	color_rect_2.custom_minimum_size = Vector2(width+4, length+4)
-	color_rect_2.size = Vector2(width+4, length+4)
+func set_size(width, height):
+	var base_size = 50.0  # Define the original base size of the platform
+	var scale_x = width / base_size
+	var scale_y = height / base_size
+	self.scale = Vector2(scale_x, scale_y)
 
 func get_pos():
 	return color_rect.global_position
@@ -133,7 +137,39 @@ func set_activation(x, sides):
 	set_process(x)
 	weakpoints = sides
 	old_weakpoints = sides.duplicate()
+	show_weakpoints()
+
+func show_weakpoints():
+	for weakpoint in weakpoints:
+		match weakpoint:
+			"up":
+				up.visible = true
+			"left":
+				left.visible = true
+			"right":
+				right.visible = true
+			"down":
+				down.visible = true
+
+func toggle_weakpoints(x):
+	weakpoints.visible = x
+	weakpoints.clear()
 
 func new_weakpoints():
 	weakpoints = old_weakpoints.duplicate()
 	weakpoint_effect.emit()
+	show_weakpoints()
+
+				
+func remove_weakpoint(side):
+	weakpoints.erase(side)
+	match side:
+			"up":
+				up.visible = false
+			"left":
+				left.visible = false
+			"right":
+				right.visible = false
+			"down":
+				down.visible = false
+	AudioPlayer.play_FX("fiora")
