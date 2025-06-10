@@ -238,14 +238,18 @@ func normal_2():
 	#next_blue = grid_helper.get_offset(next_blue, -4, 1)
 	#next_blue.transition("PlatformBlue", 3)
 	
-	for i in 3:
-		fight.enemy.new_cannon_spot()
-		fire_cannonball(3.0)
-		await delay(3.0)
-		create_blue(3.0)
-		await delay(1.5)
-		create_blue(3.0)
-		await delay(8)
+	start_cast_timer("Wave", 2.0)
+	await delay(2.0)
+	wave(5,"left")
+	wave(6,"left")
+	#for i in 3:
+		#fight.enemy.new_cannon_spot()
+		#fire_cannonball(3.0)
+		#await delay(3.0)
+		#create_blue(3.0)
+		#await delay(1.5)
+		#create_blue(3.0)
+		#await delay(8)
 	
 	pass
 	
@@ -466,6 +470,14 @@ func the_world(cast_timer, length):
 	await delay(length)
 	player.can_move = true
 
+func wave(row, starting_side):
+	match starting_side:
+		"left":
+			for platform in grid_helper.get_row(row):
+				platform.transition("PlatformRed",0.5)
+				await delay(0.5)
+		"right":
+			pass
 func on_weakpoint_hit():
 	fight.weakpoint_hit()
 
